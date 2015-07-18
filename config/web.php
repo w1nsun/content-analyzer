@@ -68,7 +68,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
+        'db' => $localParams['db'],
     ],
     'params' => $params,
 ];
