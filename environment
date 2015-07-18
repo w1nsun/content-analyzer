@@ -1,0 +1,38 @@
+1.
+
+composer require codeception/codeception
+composer require "codeception/specify=*"
+composer require "codeception/verify=*"
+
+
+2.
+
+В домашней директории открываем # ~/.bashrc
+и прописываем:
+
+export PATH="$PATH:/var/www/vendor/codeception/codeception"
+
+3.
+
+cd /var/www/tests
+codecept build
+
+4.
+
+cd
+wget https://nodejs.org/dist/v0.12.7/node-v0.12.7.tar.gz
+tar -xzf node-v0.12.7.tar.gz
+cd node-v0.12.7
+./configure
+sudo make install
+
+
+5. открываем порт
+
+iptables -A INPUT -p tcp -m multiport --ports 1337 -m comment --comment "000 tcp/1337"
+netstat -ntpua | grep 1337
+iptables-save
+
+6.
+
+npm install request --no-bin-links
