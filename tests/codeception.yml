@@ -40,3 +40,4 @@ modules:
             dsn: 'mysql:host=localhost;dbname=myproject_test'
             user: 'dbuser'
             password: 'dbuser'
+            dump: 'codeception/_data/full-db.sql'
