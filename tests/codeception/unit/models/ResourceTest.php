@@ -11,71 +11,157 @@ class ResourceTest extends TestCase
 {
     use Specify;
 
-    //-----title
-    public function testEmptyTitleValidationCreateScenario()
-    {
-        $model = new Resource(['scenario' => Resource::SCENARIO_CREATE]);
-        $model->title = '';
+    public $model;
 
-        $this->specify('title is required');
-        $this->assertFalse($model->validate(['title']));
-        $this->assertArrayHasKey('title', $model->errors);
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->model = new Resource;
     }
 
-    public function testFilledTitleValidationCreateScenario()
+    public function testValidationCreateScenario()
     {
-        $model = new Resource(['scenario' => Resource::SCENARIO_CREATE]);
-        $model->title = 'test title';
+        $this->model->setScenario(Resource::SCENARIO_CREATE);
 
-        $this->specify('title is filled');
-        $this->assertTrue($model->validate(['title']));
-        $this->assertArrayNotHasKey('title', $model->errors);
+        $this->specify('title is required', function(){
+            $this->model->title = '';
+            $this->assertFalse($this->model->validate(['title']));
+            $this->assertArrayHasKey('title', $this->model->errors);
+        });
+
+        $this->specify('title is filled', function(){
+            $this->model->title = 'test title';
+            $this->assertTrue($this->model->validate(['title']));
+            $this->assertArrayNotHasKey('title', $this->model->errors);
+        });
+
+        $this->specify('title over 255 symbols', function(){
+            $this->model->title = self::_generateRandomString(256);
+            $this->assertFalse($this->model->validate(['title']));
+            $this->assertArrayHasKey('title', $this->model->errors);
+        });
+
+        $this->specify('url is valid', function(){
+            $this->model->url = 'http://stackoverflow.com/questions/4356289/php-random-string-generator';
+            $this->assertTrue($this->model->validate(['url']));
+            $this->assertArrayNotHasKey('url', $this->model->errors);
+        });
+
+        $this->specify('url is not valid', function(){
+            $this->model->url = 'random string';
+            $this->assertFalse($this->model->validate(['url']));
+            $this->assertArrayHasKey('url', $this->model->errors);
+        });
+
+        $this->specify('status is valid', function(){
+            $this->model->status = Resource::STATUS_ACTIVE;
+            $this->assertTrue($this->model->validate(['status']));
+            $this->assertArrayNotHasKey('status', $this->model->errors);
+        });
+
+        $this->specify('status is not valid', function(){
+            $this->model->status = '1';
+            $this->assertFalse($this->model->validate(['status']));
+            $this->assertArrayHasKey('status', $this->model->errors);
+        });
+
+        $this->specify('status is default', function(){
+            $this->model->status = null;
+            $this->assertTrue($this->model->validate(['status']));
+            $this->assertEquals(Resource::STATUS_ACTIVE, $this->model->status);
+        });
+
+        $this->specify('type is valid', function(){
+            $this->model->type = Resource::TYPE_RSS;
+            $this->assertTrue($this->model->validate(['type']));
+            $this->assertArrayNotHasKey('type', $this->model->errors);
+        });
+
+        $this->specify('type is not valid', function(){
+            $this->model->type = '1';
+            $this->assertFalse($this->model->validate(['type']));
+            $this->assertArrayHasKey('type', $this->model->errors);
+        });
+
+        $this->specify('type is default', function(){
+            $this->model->type = null;
+            $this->assertTrue($this->model->validate(['type']));
+            $this->assertEquals(Resource::TYPE_RSS, $this->model->type);
+        });
+
     }
-
-    public function testOverLimitTitleValidationCreateScenario()
+    
+    public function testValidationUpdateScenario()
     {
-        $model = new Resource(['scenario' => Resource::SCENARIO_CREATE]);
-        $model->title = self::_generateRandomString(256);
+        $this->model->setScenario(Resource::SCENARIO_UPDATE);
 
-        $this->specify('title over 255 symbols');
-        $this->assertFalse($model->validate(['title']));
-        $this->assertArrayHasKey('title', $model->errors);
+        $this->specify('title is required', function(){
+            $this->model->title = '';
+            $this->assertFalse($this->model->validate(['title']));
+            $this->assertArrayHasKey('title', $this->model->errors);
+        });
+
+        $this->specify('title is filled', function(){
+            $this->model->title = 'test title';
+            $this->assertTrue($this->model->validate(['title']));
+            $this->assertArrayNotHasKey('title', $this->model->errors);
+        });
+
+        $this->specify('title over 255 symbols', function(){
+            $this->model->title = self::_generateRandomString(256);
+            $this->assertFalse($this->model->validate(['title']));
+            $this->assertArrayHasKey('title', $this->model->errors);
+        });
+
+        $this->specify('url is valid', function(){
+            $this->model->url = 'http://stackoverflow.com/questions/4356289/php-random-string-generator';
+            $this->assertTrue($this->model->validate(['url']));
+            $this->assertArrayNotHasKey('url', $this->model->errors);
+        });
+
+        $this->specify('url is not valid', function(){
+            $this->model->url = 'random string';
+            $this->assertFalse($this->model->validate(['url']));
+            $this->assertArrayHasKey('url', $this->model->errors);
+        });
+
+        $this->specify('status is valid', function(){
+            $this->model->status = Resource::STATUS_ACTIVE;
+            $this->assertTrue($this->model->validate(['status']));
+            $this->assertArrayNotHasKey('status', $this->model->errors);
+        });
+
+        $this->specify('status is not valid', function(){
+            $this->model->status = '1';
+            $this->assertFalse($this->model->validate(['status']));
+            $this->assertArrayHasKey('status', $this->model->errors);
+        });
+
+        $this->specify('status is default', function(){
+            $this->model->status = null;
+            $this->assertTrue($this->model->validate(['status']));
+            $this->assertEquals(Resource::STATUS_ACTIVE, $this->model->status);
+        });
+
+        $this->specify('type is valid', function(){
+            $this->model->type = Resource::TYPE_RSS;
+            $this->assertTrue($this->model->validate(['type']));
+            $this->assertArrayNotHasKey('type', $this->model->errors);
+        });
+
+        $this->specify('type is not valid', function(){
+            $this->model->type = '1';
+            $this->assertFalse($this->model->validate(['type']));
+            $this->assertArrayHasKey('type', $this->model->errors);
+        });
+
+        $this->specify('type is default', function(){
+            $this->model->type = null;
+            $this->assertTrue($this->model->validate(['type']));
+            $this->assertEquals(Resource::TYPE_RSS, $this->model->type);
+        });
     }
-
-
-    //------url
-    public function testUrlCorrectValidationCreateScenario()
-    {
-        $model = new Resource(['scenario' => Resource::SCENARIO_CREATE]);
-        $model->url = 'http://stackoverflow.com/questions/4356289/php-random-string-generator';
-
-        $this->specify('correct url');
-        $this->assertTrue($model->validate(['url']));
-        $this->assertArrayNotHasKey('url', $model->errors);
-    }
-
-    public function testUrlWrongValidationCreateScenario()
-    {
-        $model = new Resource(['scenario' => Resource::SCENARIO_CREATE]);
-        $model->url = self::_generateRandomString(50);
-
-        $this->specify('incorrect url');
-        $this->assertFalse($model->validate(['url']));
-        $this->assertArrayHasKey('url', $model->errors);
-    }
-
-
-    //------status
-    public function testStatusCorrectValidationCreateScenario()
-    {
-        $model = new Resource(['scenario' => Resource::SCENARIO_CREATE]);
-        $model->status = Resource::STATUS_ACTIVE;
-
-        $this->specify('correct status');
-        $this->assertTrue($model->validate(['status']));
-        $this->assertArrayNotHasKey('status', $model->errors);
-    }
-
 
 
     /*

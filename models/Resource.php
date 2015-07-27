@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "resource".
@@ -14,7 +15,7 @@ use Yii;
  * @property integer $last_run_time
  * @property integer $status
  */
-class Resource extends \yii\db\ActiveRecord
+class Resource extends ActiveRecord
 {
 
     const SCENARIO_CREATE = 'create';
@@ -43,25 +44,24 @@ class Resource extends \yii\db\ActiveRecord
             //create
             [['title', 'url'], 'required', 'on'=>self::SCENARIO_CREATE],
             [['url'], 'url', 'on'=>self::SCENARIO_CREATE],
+            [['last_run_time'], 'default', 'value' => 0, 'on'=>self::SCENARIO_CREATE],
             [['last_run_time'], 'integer', 'on'=>self::SCENARIO_CREATE],
             [['title'], 'string', 'max' => 255, 'on'=>self::SCENARIO_CREATE],
             [['status'], 'default', 'value' => self::STATUS_ACTIVE, 'on'=>self::SCENARIO_CREATE],
-            [['last_run_time'], 'default', 'value' => 0, 'on'=>self::SCENARIO_CREATE],
+            [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
             [['type'], 'default', 'value' => self::TYPE_RSS, 'on'=>self::SCENARIO_CREATE],
-            [['type'], 'in', 'range' => array_keys(self::enumType()), 'on'=>self::SCENARIO_CREATE],
-            [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'on'=>self::SCENARIO_CREATE],
+            [['type'], 'in', 'range' => array_keys(self::enumType()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
 
             //update
             [['title', 'url'], 'required', 'on'=>self::SCENARIO_UPDATE],
             [['url'], 'url', 'on'=>self::SCENARIO_UPDATE],
+            [['last_run_time'], 'default', 'value' => 0, 'on'=>self::SCENARIO_UPDATE],
             [['last_run_time'], 'integer', 'on'=>self::SCENARIO_UPDATE],
             [['title'], 'string', 'max' => 255, 'on'=>self::SCENARIO_UPDATE],
             [['status'], 'default', 'value' => self::STATUS_ACTIVE, 'on'=>self::SCENARIO_UPDATE],
-            [['last_run_time'], 'default', 'value' => 0, 'on'=>self::SCENARIO_UPDATE],
+            [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_UPDATE],
             [['type'], 'default', 'value' => self::TYPE_RSS, 'on'=>self::SCENARIO_UPDATE],
-            [['type'], 'default', 'value' => self::TYPE_RSS, 'on'=>self::SCENARIO_UPDATE],
-            [['type'], 'in', 'range' => array_keys(self::enumType()), 'on'=>self::SCENARIO_UPDATE],
-            [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'on'=>self::SCENARIO_UPDATE],
+            [['type'], 'in', 'range' => array_keys(self::enumType()), 'strict'=>true, 'on'=>self::SCENARIO_UPDATE],
         ];
     }
 

@@ -1,13 +1,14 @@
 <?php
 
 namespace app\models;
+use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[Resource]].
  *
  * @see Resource
  */
-class ResourceQuery extends \yii\db\ActiveQuery
+class ResourceQuery extends ActiveQuery
 {
     /*public function active()
     {
