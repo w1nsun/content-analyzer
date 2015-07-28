@@ -61,15 +61,21 @@ class ResourceTest extends TestCase
         });
 
         $this->specify('status is not valid', function(){
-            $this->model->status = '1';
-            $this->assertFalse($this->model->validate(['status']));
-            $this->assertArrayHasKey('status', $this->model->errors);
+            $this->model->status = 'status';
+            $this->assertTrue($this->model->validate(['status']));
+            $this->assertEquals(0, $this->model->status);
         });
 
         $this->specify('status is default', function(){
             $this->model->status = null;
             $this->assertTrue($this->model->validate(['status']));
             $this->assertEquals(Resource::STATUS_ACTIVE, $this->model->status);
+        });
+
+        $this->specify('status after filter', function(){
+            $this->model->status = (string)Resource::STATUS_ACTIVE;
+            $this->assertTrue($this->model->validate(['status']));
+            $this->assertTrue(is_int($this->model->status));
         });
 
         $this->specify('type is valid', function(){
@@ -79,7 +85,7 @@ class ResourceTest extends TestCase
         });
 
         $this->specify('type is not valid', function(){
-            $this->model->type = '1';
+            $this->model->type = 'type';
             $this->assertFalse($this->model->validate(['type']));
             $this->assertArrayHasKey('type', $this->model->errors);
         });
@@ -90,8 +96,14 @@ class ResourceTest extends TestCase
             $this->assertEquals(Resource::TYPE_RSS, $this->model->type);
         });
 
+        $this->specify('type after filter', function(){
+            $this->model->type = (string)Resource::TYPE_RSS;
+            $this->assertTrue($this->model->validate(['type']));
+            $this->assertTrue(is_int($this->model->type));
+        });
+
     }
-    
+
     public function testValidationUpdateScenario()
     {
         $this->model->setScenario(Resource::SCENARIO_UPDATE);
@@ -133,15 +145,21 @@ class ResourceTest extends TestCase
         });
 
         $this->specify('status is not valid', function(){
-            $this->model->status = '1';
-            $this->assertFalse($this->model->validate(['status']));
-            $this->assertArrayHasKey('status', $this->model->errors);
+            $this->model->status = 'status';
+            $this->assertTrue($this->model->validate(['status']));
+            $this->assertEquals(0, $this->model->status);
         });
 
         $this->specify('status is default', function(){
             $this->model->status = null;
             $this->assertTrue($this->model->validate(['status']));
             $this->assertEquals(Resource::STATUS_ACTIVE, $this->model->status);
+        });
+
+        $this->specify('status after filter', function(){
+            $this->model->status = (string)Resource::STATUS_ACTIVE;
+            $this->assertTrue($this->model->validate(['status']));
+            $this->assertTrue(is_int($this->model->status));
         });
 
         $this->specify('type is valid', function(){
@@ -151,7 +169,7 @@ class ResourceTest extends TestCase
         });
 
         $this->specify('type is not valid', function(){
-            $this->model->type = '1';
+            $this->model->type = 'type';
             $this->assertFalse($this->model->validate(['type']));
             $this->assertArrayHasKey('type', $this->model->errors);
         });
@@ -160,6 +178,12 @@ class ResourceTest extends TestCase
             $this->model->type = null;
             $this->assertTrue($this->model->validate(['type']));
             $this->assertEquals(Resource::TYPE_RSS, $this->model->type);
+        });
+
+        $this->specify('type after filter', function(){
+            $this->model->type = (string)Resource::TYPE_RSS;
+            $this->assertTrue($this->model->validate(['type']));
+            $this->assertTrue(is_int($this->model->type));
         });
     }
 

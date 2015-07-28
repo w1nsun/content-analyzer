@@ -48,9 +48,14 @@ class Resource extends ActiveRecord
             [['last_run_time'], 'integer', 'on'=>self::SCENARIO_CREATE],
             [['title'], 'string', 'max' => 255, 'on'=>self::SCENARIO_CREATE],
             [['status'], 'default', 'value' => self::STATUS_ACTIVE, 'on'=>self::SCENARIO_CREATE],
-            [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
             [['type'], 'default', 'value' => self::TYPE_RSS, 'on'=>self::SCENARIO_CREATE],
+            [['status', 'type'], 'filter', 'filter' => 'intval', 'skipOnArray' => true, 'on'=>self::SCENARIO_CREATE],
+            [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
             [['type'], 'in', 'range' => array_keys(self::enumType()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
+
+
+
+            [['username', 'email'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
 
             //update
             [['title', 'url'], 'required', 'on'=>self::SCENARIO_UPDATE],
@@ -59,8 +64,9 @@ class Resource extends ActiveRecord
             [['last_run_time'], 'integer', 'on'=>self::SCENARIO_UPDATE],
             [['title'], 'string', 'max' => 255, 'on'=>self::SCENARIO_UPDATE],
             [['status'], 'default', 'value' => self::STATUS_ACTIVE, 'on'=>self::SCENARIO_UPDATE],
-            [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_UPDATE],
             [['type'], 'default', 'value' => self::TYPE_RSS, 'on'=>self::SCENARIO_UPDATE],
+            [['status', 'type'], 'filter', 'filter' => 'intval', 'skipOnArray' => true, 'on'=>self::SCENARIO_UPDATE],
+            [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_UPDATE],
             [['type'], 'in', 'range' => array_keys(self::enumType()), 'strict'=>true, 'on'=>self::SCENARIO_UPDATE],
         ];
     }
@@ -118,4 +124,5 @@ class Resource extends ActiveRecord
     {
         return new ResourceQuery(get_called_class());
     }
+
 }
