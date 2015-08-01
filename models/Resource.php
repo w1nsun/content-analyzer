@@ -53,10 +53,6 @@ class Resource extends ActiveRecord
             [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
             [['type'], 'in', 'range' => array_keys(self::enumType()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
 
-
-
-            [['username', 'email'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
-
             //update
             [['title', 'url'], 'required', 'on'=>self::SCENARIO_UPDATE],
             [['url'], 'url', 'on'=>self::SCENARIO_UPDATE],

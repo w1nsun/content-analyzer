@@ -7,7 +7,7 @@ class m150718_132240_create_resources_table extends Migration
 {
     public function up()
     {
-        $this->createTable('resource', [
+        $this->createTable('{{%resource}}', [
             'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY',
             'title' => Schema::TYPE_STRING.' NOT NULL',
             'url' => Schema::TYPE_TEXT.' NOT NULL',
@@ -19,7 +19,7 @@ class m150718_132240_create_resources_table extends Migration
 
     public function down()
     {
-        $this->dropTable('resource');
+        $this->dropTable('{{%resource}}');
     }
     
     /*

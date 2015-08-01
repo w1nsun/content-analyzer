@@ -41,3 +41,5 @@ modules:
             user: 'dbuser'
             password: 'dbuser'
             dump: 'codeception/_data/full-db.sql'
+            populate: true
+            reconnect: true

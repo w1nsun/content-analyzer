@@ -187,6 +187,23 @@ class ResourceTest extends TestCase
         });
     }
 
+    public function testSave()
+    {
+        $this->specify('save new record', function(){
+
+            $this->model->title = 'Title';
+            $this->model->url = 'http://stackoverflow.com/questions/4356289/php-random-string-generator';
+
+            $this->model->save();
+
+            $this->assertTrue($this->model->save());
+            $this->tester->seeInDatabase('resource', ['title' => $this->model->title]);
+        });
+    }
+
+
+
+
 
     /*
      * Other functions

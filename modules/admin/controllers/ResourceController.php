@@ -59,7 +59,7 @@ class ResourceController extends BaseController
      */
     public function actionCreate()
     {
-        $model = new Resource();
+        $model = new Resource(['scenario'=>Resource::SCENARIO_CREATE]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -79,6 +79,8 @@ class ResourceController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        $model->setScenario(Resource::SCENARIO_UPDATE);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

@@ -2,12 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use \app\models\Resource;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Resource */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Resources'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Ресурсы'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="resource-view">
@@ -15,11 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+        <?= Html::a(Yii::t('app', 'Редктировать'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Удалить'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                'confirm' => Yii::t('app', 'Вы уверены что хотите удалить этот элемент?'),
                 'method' => 'post',
             ],
         ]) ?>
@@ -31,9 +32,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'url:ntext',
-            'type',
+            [
+                'attribute' => 'type',
+                'value' => Resource::enumType($model->type),
+            ],
             'last_run_time:datetime',
-            'status',
+            [
+                'attribute' => 'status',
+                'value' => Resource::enumStatus($model->status),
+            ],
         ],
     ]) ?>
 

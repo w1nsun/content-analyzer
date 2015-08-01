@@ -1,16 +1,21 @@
 <?php
 
 return [
-    'Ресурсы' => 'Resources',
-    'Добавить Ресурс' => 'Create Resource',
-    'ID' => 'ID',
-    'Url' => 'Url',
-    'Тип' => 'Type',
+    'Активен' => 'Active',
     'Время последнего парсинга' => 'Last Parsing Time',
-    'Статус' => 'Status',
+    'Вы уверены что хотите удалить этот элемент?' => 'Are you sure you want to delete this item?',
+    'Добавить Ресурс' => 'Create Resource',
     'Добавить' => 'Create',
     'Обновить' => 'Update',
-    'Активен' => 'Active',
     'Отключен' => 'Disable',
+    'Ресурсы' => 'Resources',
+    'Редктировать' => 'Update',
+    'Редктирование' => 'Update',
+    'Редактировать {item}: ' => 'Update {item}: ',
+    'Статус' => 'Status',
+    'Тип' => 'Type',
+    'Удалить' => 'Delete',
+    'Url' => 'Url',
     'RSS' => 'RSS',
+    'ID' => 'ID',
 ];
