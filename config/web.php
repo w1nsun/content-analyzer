@@ -1,7 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
-$localParams = require(__DIR__ . '/development.php');
+$localParams = require(__DIR__ . '/local_params.php');
 
 $config = [
     'id' => 'basic',
@@ -12,6 +12,9 @@ $config = [
     'modules' => [
         'admin' => [
             'class' => 'app\modules\admin\Module',
+        ],
+        'api' => [
+            'class' => 'app\modules\api\Module',
         ],
     ],
     'components' => [
@@ -35,11 +38,15 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+
+
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api_user'],
                 'admin' => 'admin/dashboard',
                 '<controller:\w+>' => '<controller>/index',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
@@ -47,6 +54,9 @@ $config = [
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
+
+
+
         'i18n' => [
             'translations' => [
                 'app*' => [
