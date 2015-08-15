@@ -1,7 +1,3 @@
 {
-    "mysql_connection" : {
-        "host"     : "localhost",
-        "user"     : "user",
-        "password" : "password"
-    }
+    "serviceAccessToken" : "token"
 }
