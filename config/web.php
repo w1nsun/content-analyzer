@@ -1,7 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
-$localParams = require(__DIR__ . '/local.php');
+$localParams = require(__DIR__ . '/development.php');
 
 $config = [
     'id' => 'basic',
@@ -25,6 +25,12 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\WebUser',
             'enableAutoLogin' => true,
+        ],
+        'contentCountry' => [
+            'class' => 'app\components\ContentCountry',
+        ],
+        'contentLanguage' => [
+            'class' => 'app\components\ContentLanguage',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

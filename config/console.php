@@ -3,7 +3,7 @@
 Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 
 $params = require(__DIR__ . '/params.php');
-$localParams = require(__DIR__ . '/local.php');
+$localParams = require(__DIR__ . '/development.php');
 
 return [
     'id' => 'basic-console',
