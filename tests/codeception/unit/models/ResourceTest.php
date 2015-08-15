@@ -95,13 +95,6 @@ class ResourceTest extends TestCase
             $this->assertTrue($this->model->validate(['type']));
             $this->assertEquals(Resource::TYPE_RSS, $this->model->type);
         });
-
-        $this->specify('type after filter', function(){
-            $this->model->type = (string)Resource::TYPE_RSS;
-            $this->assertTrue($this->model->validate(['type']));
-            $this->assertTrue(is_int($this->model->type));
-        });
-
     }
 
     public function testValidationUpdateScenario()
@@ -178,12 +171,6 @@ class ResourceTest extends TestCase
             $this->model->type = null;
             $this->assertTrue($this->model->validate(['type']));
             $this->assertEquals(Resource::TYPE_RSS, $this->model->type);
-        });
-
-        $this->specify('type after filter', function(){
-            $this->model->type = (string)Resource::TYPE_RSS;
-            $this->assertTrue($this->model->validate(['type']));
-            $this->assertTrue(is_int($this->model->type));
         });
     }
 
