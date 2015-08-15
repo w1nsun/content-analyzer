@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Resource;
+use app\models\Article;
 
 /**
- * ResourceSearch represents the model behind the search form about `app\models\Resource`.
+ * ArticleSearch represents the model behind the search form about `app\models\Article`.
  */
-class ResourceSearch extends Resource
+class ArticleSearch extends Article
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ResourceSearch extends Resource
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
-            [['title', 'type', 'url'], 'safe'],
+            [['id', 'resource_id', 'updated_at', 'created_at', 'status'], 'integer'],
+            [['title', 'description', 'url', 'type'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ResourceSearch extends Resource
      */
     public function search($params)
     {
-        $query = Resource::find();
+        $query = Article::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,12 +57,16 @@ class ResourceSearch extends Resource
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'type' => $this->type,
+            'resource_id' => $this->resource_id,
+            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at,
             'status' => $this->status,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'url', $this->url]);
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'url', $this->url])
+            ->andFilterWhere(['like', 'type', $this->type]);
 
         return $dataProvider;
     }

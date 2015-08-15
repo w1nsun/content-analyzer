@@ -11,27 +11,29 @@ use yii\db\ActiveRecord;
  * @property integer $id
  * @property string $title
  * @property string $url
- * @property integer $type
- * @property integer $last_run_time
+ * @property string $type
+ * @property string $lang
+ * @property string $country
+ * @property integer $updated_at
+ * @property integer $created_at
  * @property integer $status
  */
 class Resource extends ActiveRecord
 {
-
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
 
     const STATUS_ACTIVE = 1;
     const STATUS_DISABLE = 0;
 
-    const TYPE_RSS = 1;
+    const TYPE_RSS = 'rss';
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'resource';
+        return '{{%resource}}';
     }
 
     /**
@@ -44,24 +46,24 @@ class Resource extends ActiveRecord
             //create
             [['title', 'url'], 'required', 'on'=>self::SCENARIO_CREATE],
             [['url'], 'url', 'on'=>self::SCENARIO_CREATE],
-            [['last_run_time'], 'default', 'value' => 0, 'on'=>self::SCENARIO_CREATE],
-            [['last_run_time'], 'integer', 'on'=>self::SCENARIO_CREATE],
             [['title'], 'string', 'max' => 255, 'on'=>self::SCENARIO_CREATE],
             [['status'], 'default', 'value' => self::STATUS_ACTIVE, 'on'=>self::SCENARIO_CREATE],
+            [['lang'], 'in', 'range'=> array_keys(Yii::$app->get('contentLanguage')->getList()), 'on'=>self::SCENARIO_CREATE],
+            [['country'], 'in', 'range'=> array_keys(Yii::$app->get('contentCountry')->getList()), 'on'=>self::SCENARIO_CREATE],
             [['type'], 'default', 'value' => self::TYPE_RSS, 'on'=>self::SCENARIO_CREATE],
-            [['status', 'type'], 'filter', 'filter' => 'intval', 'skipOnArray' => true, 'on'=>self::SCENARIO_CREATE],
+            [['status'], 'filter', 'filter' => 'intval', 'skipOnArray' => true, 'on'=>self::SCENARIO_CREATE],
             [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
             [['type'], 'in', 'range' => array_keys(self::enumType()), 'strict'=>true, 'on'=>self::SCENARIO_CREATE],
 
             //update
             [['title', 'url'], 'required', 'on'=>self::SCENARIO_UPDATE],
             [['url'], 'url', 'on'=>self::SCENARIO_UPDATE],
-            [['last_run_time'], 'default', 'value' => 0, 'on'=>self::SCENARIO_UPDATE],
-            [['last_run_time'], 'integer', 'on'=>self::SCENARIO_UPDATE],
             [['title'], 'string', 'max' => 255, 'on'=>self::SCENARIO_UPDATE],
             [['status'], 'default', 'value' => self::STATUS_ACTIVE, 'on'=>self::SCENARIO_UPDATE],
+            [['lang'], 'in', 'range'=> array_keys(Yii::$app->get('contentLanguage')->getList()), 'on'=>self::SCENARIO_UPDATE],
+            [['country'], 'in', 'range'=> array_keys(Yii::$app->get('contentCountry')->getList()), 'on'=>self::SCENARIO_UPDATE],
             [['type'], 'default', 'value' => self::TYPE_RSS, 'on'=>self::SCENARIO_UPDATE],
-            [['status', 'type'], 'filter', 'filter' => 'intval', 'skipOnArray' => true, 'on'=>self::SCENARIO_UPDATE],
+            [['status'], 'filter', 'filter' => 'intval', 'skipOnArray' => true, 'on'=>self::SCENARIO_UPDATE],
             [['status'], 'in', 'range' => array_keys(self::enumStatus()), 'strict'=>true, 'on'=>self::SCENARIO_UPDATE],
             [['type'], 'in', 'range' => array_keys(self::enumType()), 'strict'=>true, 'on'=>self::SCENARIO_UPDATE],
         ];
@@ -107,7 +109,10 @@ class Resource extends ActiveRecord
             'title' => Yii::t('app', 'Заголовок'),
             'url' => Yii::t('app', 'Url'),
             'type' => Yii::t('app', 'Тип'),
-            'last_run_time' => Yii::t('app', 'Время последнего парсинга'),
+            'lang' => Yii::t('app', 'Язык'),
+            'country' => Yii::t('app', 'Страна'),
+            'created_at' => Yii::t('app', 'Время создания'),
+            'updated_at' => Yii::t('app', 'Время редактирования'),
             'status' => Yii::t('app', 'Статус'),
         ];
     }
@@ -121,4 +126,20 @@ class Resource extends ActiveRecord
         return new ResourceQuery(get_called_class());
     }
 
+
+    /**
+     * @Override
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if($this->isNewRecord){
+            $this->created_at = time();
+        }
+
+        $this->updated_at = time();
+
+        return parent::beforeSave($insert);
+    }
 }
