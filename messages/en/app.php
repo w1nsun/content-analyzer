@@ -2,8 +2,9 @@
 
 return [
     'Активен' => 'Active',
-    'Время последнего парсинга' => 'Last Parsing Time',
     'Вы уверены что хотите удалить этот элемент?' => 'Are you sure you want to delete this item?',
+    'Время создания' => 'Crated time',
+    'Время редактирования' => 'Updated time',
     'Добавить Ресурс' => 'Create Resource',
     'Добавить' => 'Create',
     'Обновить' => 'Update',
@@ -18,4 +19,17 @@ return [
     'Url' => 'Url',
     'RSS' => 'RSS',
     'ID' => 'ID',
+    'ID Ресурса' => 'Resource ID',
+    'Заголовок' => 'Title',
+    'Описание' => 'Description',
+    'Язык' => 'Language',
+    'Старана' => 'Country',
+    'Поиск' => 'Search',
+    'Сбросить' => 'Reset',
+    'Статьи' => 'Articles',
+    'Добавить Статью' => 'Create Article',
+    'Великобритания' => 'United Kingdom',
+    'США' => 'USA',
+    'Украина' => 'Ukraine',
+    'Россия' => 'Russia',
 ];
