@@ -13,11 +13,11 @@ class m150801_083356_create_articles_table extends Migration
             'title' => Schema::TYPE_TEXT . ' NOT NULL',
             'description' => Schema::TYPE_TEXT . ' NOT NULL',
             'url' => Schema::TYPE_TEXT . ' NOT NULL',
-            'type' => 'TINYINT UNSIGNED DEFAULT NULL',
+            'type' => Schema::TYPE_STRING . ' NOT NULL',
             'lang' => Schema::TYPE_STRING . ' NOT NULL',
             'country' => Schema::TYPE_STRING . ' NOT NULL',
-            'update_time' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
-            'create_time' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
+            'updated_at' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
+            'created_at' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
             'status' => 'TINYINT UNSIGNED DEFAULT 0',
         ], 'ENGINE=INNODB');
 
