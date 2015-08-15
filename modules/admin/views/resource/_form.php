@@ -18,6 +18,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'type')->dropDownList(\app\models\Resource::enumType()) ?>
 
+    <?= $form->field($model, 'lang')->dropDownList(Yii::$app->get('contentLanguage')->getList()) ?>
+
+    <?= $form->field($model, 'country')->dropDownList(Yii::$app->get('contentCountry')->getList()) ?>
+
     <?= $form->field($model, 'status')->dropDownList(\app\models\Resource::enumStatus()) ?>
 
     <div class="form-group">

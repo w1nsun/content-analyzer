@@ -2,16 +2,15 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use \app\models\Resource;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Resource */
+/* @var $model app\models\Article */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Ресурсы'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Статьи'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="resource-view">
+<div class="article-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -30,26 +29,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'title',
+            'resource_id',
+            'title:ntext',
+            'description:ntext',
             'url:ntext',
-            [
-                'attribute' => 'type',
-                'value' => Resource::enumType($model->type),
-            ],
-            [
-                'attribute' => 'country',
-                'value' => Yii::$app->get('contentCountry')->findByCode($model->country),
-            ],
-            [
-                'attribute' => 'lang',
-                'value' => Yii::$app->get('contentLanguage')->findByCode($model->lang),
-            ],
-            [
-                'attribute' => 'status',
-                'value' => Resource::enumStatus($model->status),
-            ],
-            'created_at:datetime',
-            'updated_at:datetime',
+            'type',
+            'updated_at',
+            'created_at',
+            'status',
         ],
     ]) ?>
 
