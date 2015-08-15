@@ -28,6 +28,13 @@ class WebUser extends Object implements IdentityInterface
             'authKey' => 'test101key',
             'accessToken' => '101-token',
         ],
+        '102' => [
+            'id' => '102',
+            'username' => 'api',
+            'password' => 'api',
+            'authKey' => 'test102key',
+            'accessToken' => '102-token',
+        ],
     ];
 
     /**
