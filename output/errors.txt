@@ -1,0 +1,59 @@
+Array
+(
+    [0] => Array
+        (
+            [line] => 14
+            [file] => /var/www/modules/api/controllers/ResourceController.php
+            [message] => No docblock for element 'app\modules\api\controllers\ResourceController'
+        )
+
+    [1] => Array
+        (
+            [line] => 16
+            [file] => /var/www/modules/api/controllers/ResourceController.php
+            [message] => No docblock for element '$modelClass'
+        )
+
+    [2] => Array
+        (
+            [line] => 16
+            [file] => /var/www/modules/api/controllers/ResourceController.php
+            [message] => No short description for element '$modelClass'
+        )
+
+    [3] => Array
+        (
+            [line] => 18
+            [file] => /var/www/modules/api/controllers/ResourceController.php
+            [message] => No docblock for element '$serializer'
+        )
+
+    [4] => Array
+        (
+            [line] => 18
+            [file] => /var/www/modules/api/controllers/ResourceController.php
+            [message] => No short description for element '$serializer'
+        )
+
+    [5] => Array
+        (
+            [line] => 23
+            [file] => /var/www/modules/api/controllers/ResourceController.php
+            [message] => No docblock for element 'behaviors'
+        )
+
+    [6] => Array
+        (
+            [line] => 38
+            [file] => /var/www/modules/api/controllers/ResourceController.php
+            [message] => No docblock for element 'actions'
+        )
+
+    [7] => Array
+        (
+            [line] => 52
+            [file] => /var/www/modules/api/controllers/ResourceController.php
+            [message] => No docblock for element 'actionIndex'
+        )
+
+)
