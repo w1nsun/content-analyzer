@@ -22,6 +22,15 @@ use yii\db\ActiveRecord;
  */
 class Article extends ActiveRecord
 {
+    const SCENARIO_CREATE = 'create';
+    const SCENARIO_UPDATE = 'update';
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_DISABLE = 0;
+
+    const TYPE_ARTICLE = 'article';
+    const TYPE_VIDEO = 'video';
+
     /**
      * @inheritdoc
      */
@@ -92,5 +101,34 @@ class Article extends ActiveRecord
         $this->updated_at = time();
 
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * @param null $status
+     * @return array
+     */
+    public static function enumStatus($status=null)
+    {
+        $enum = [
+            self::STATUS_ACTIVE => Yii::t('app', 'Активен'),
+            self::STATUS_DISABLE => Yii::t('app', 'Отключен'),
+        ];
+
+        return $status === null ? $enum : $enum[$status];
+    }
+
+
+    /**
+     * @param null $type
+     * @return array
+     */
+    public static function enumType($type=null)
+    {
+        $enum = [
+            self::TYPE_ARTICLE => Yii::t('app', 'Статья'),
+            self::TYPE_VIDEO => Yii::t('app', 'Видео'),
+        ];
+
+        return $type === null ? $enum : $enum[$type];
     }
 }

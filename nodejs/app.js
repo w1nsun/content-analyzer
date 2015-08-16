@@ -6,7 +6,93 @@ var Feed = require('feed-read');
 
 
 
-function getResources(){
+
+function readRss(url){
+    // Each article has the following properties:
+    //
+    //   * "title"     - The article title (String).
+    //   * "author"    - The author's name (String).
+    //   * "link"      - The original article link (String).
+    //   * "content"   - The HTML content of the article (String).
+    //   * "published" - The date that the article was published (Date).
+    //   * "feed"      - {name, source, link}
+    //
+    Feed(url, function(err, articles) {
+        if (err) throw err;
+
+        for(var i=0; i<articles.length; i++){
+
+            var articleLink = articles[i].link;
+            var articleDate = articles[i].published;
+            var articleTitle = articles[i].title.replace(/<!\[CDATA\[([^\]]+)]\]>/ig, "$1");
+
+            Request(
+                {
+                    uri:articles[i].link,
+                    method:'GET',
+                    encoding:'binary'
+                },
+                (
+                    function(){
+                        var article = articles[i];
+
+                        return function (err, res, body) {
+                            //Получили текст страницы, теперь исправляем кодировку и
+                            //разбираем DOM с помощью Cheerio.
+                            var $=Cheerio.load(Iconv.encode(Iconv.decode(new Buffer(body,'binary'), 'win1251'), 'utf8'));
+
+                            writeArticle(article);
+
+                            //console.log(rssArticle);
+                            console.log(article);
+
+                            //$('meta[property="og:image"]').each(function(){
+                            //    console.log($(this).attr('content'));
+                            //});
+
+
+                        }
+                    }
+                )()
+            );
+
+        }
+    });
+}
+
+
+function writeArticle(article){
+    var options = {
+        url: Config.serviceDomain+'/api/resource/create',
+        formData: {
+            article_title: article.title
+        },
+        headers: {
+            'Authorization': 'Bearer '+Config.serviceAccessToken
+        }
+    };
+
+    function callback(error, response, body){
+        if (!error && response.statusCode == 200) {
+            //var resources = JSON.parse(body);
+
+
+
+
+
+            console.log(body);
+
+
+        }else{
+            console.log(error);
+            return;
+        }
+    }
+
+    Request.post(options, callback);
+}
+
+function readResources(){
     var options = {
         url: Config.serviceDomain+'/api/resource',
         headers: {
@@ -17,16 +103,31 @@ function getResources(){
     function callback(error, response, body) {
         if (!error && response.statusCode == 200) {
             var resources = JSON.parse(body);
-            console.log(body);
+
+            for(var i=0; i<resources.items.length; i++){
+
+
+
+
+                readRss(resources.items[i].url);
+
+
+
+
+
+                //console.log(resources.items[i]);
+            }
+
         }else{
             console.log(error);
+            return;
         }
     }
 
     Request(options, callback);
 }
 
-return getResources();
+return readResources();
 
 
 

@@ -27,6 +27,8 @@ return [
     'Поиск' => 'Search',
     'Сбросить' => 'Reset',
     'Статьи' => 'Articles',
+    'Статья' => 'Article',
+    'Видео' => 'Video',
     'Добавить Статью' => 'Create Article',
     'Великобритания' => 'United Kingdom',
     'США' => 'USA',
