@@ -1,3 +1,4 @@
 {
-    "serviceAccessToken" : "token"
+    "serviceAccessToken" : "token",
+    "serviceDomain" : "example.com"
 }
