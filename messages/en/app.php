@@ -34,4 +34,11 @@ return [
     'США' => 'USA',
     'Украина' => 'Ukraine',
     'Россия' => 'Russia',
+    'Owner' => 'Owner',
+    'Owner ID' => 'Owner ID',
+    'Src' => 'Src',
+    'Ширины' => 'Width',
+    'Высота' => 'Height',
+    'Размер' => 'Size',
+    'Parent ID' => 'Parent ID',
 ];

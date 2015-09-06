@@ -38,9 +38,6 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-
-
-
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -54,9 +51,6 @@ $config = [
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
-
-
-
         'i18n' => [
             'translations' => [
                 'app*' => [
