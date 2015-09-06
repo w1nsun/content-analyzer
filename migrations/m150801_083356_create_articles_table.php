@@ -14,8 +14,6 @@ class m150801_083356_create_articles_table extends Migration
             'description' => Schema::TYPE_TEXT . ' NOT NULL',
             'url' => Schema::TYPE_TEXT . ' NOT NULL',
             'type' => Schema::TYPE_STRING . ' NOT NULL',
-            'lang' => Schema::TYPE_STRING . ' NOT NULL',
-            'country' => Schema::TYPE_STRING . ' NOT NULL',
             'updated_at' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
             'created_at' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
             'status' => 'TINYINT UNSIGNED DEFAULT 0',

@@ -45,10 +45,18 @@ class Article extends ActiveRecord
     public function rules()
     {
         return [
-            [['resource_id', 'title', 'description', 'url', 'type', 'lang', 'country', 'updated_at', 'created_at'], 'required'],
-            [['resource_id', 'updated_at', 'created_at', 'status'], 'integer'],
-            [['title', 'description', 'url'], 'string'],
-            [['type', 'lang', 'country'], 'string', 'max' => 255]
+
+            //create
+            [['resource_id'], 'filter', 'filter' => 'intval', 'on' => self::SCENARIO_CREATE],
+            [['title'], 'string', 'length' => ['max' => 1024], 'on' => self::SCENARIO_CREATE],
+            [['description'], 'filter', 'filter' => 'strip_tags', 'on' => self::SCENARIO_CREATE],
+            [['title', 'description', 'url'], 'trim', 'on' => self::SCENARIO_CREATE],
+
+            //update
+            [['resource_id'], 'filter', 'filter' => 'intval', 'on' => self::SCENARIO_UPDATE],
+            [['title'], 'string', 'length' => ['max' => 1024], 'on' => self::SCENARIO_UPDATE],
+            [['description'], 'filter', 'filter' => 'strip_tags', 'on' => self::SCENARIO_UPDATE],
+            [['title', 'description', 'url'], 'trim', 'on' => self::SCENARIO_UPDATE],
         ];
     }
 

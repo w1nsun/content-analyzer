@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-use yii\db\ActiveQuery;
+use app\components\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[Resource]].

@@ -1,13 +1,14 @@
 <?php
 
 namespace app\models;
+use app\components\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[Article]].
  *
  * @see Article
  */
-class ArticleQuery extends \yii\db\ActiveQuery
+class ArticleQuery extends ActiveQuery
 {
     /*public function active()
     {
