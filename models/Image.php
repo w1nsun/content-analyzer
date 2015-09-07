@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\components\ActiveRecord;
 
 /**
  * This is the model class for table "image".
@@ -17,7 +18,7 @@ use Yii;
  * @property integer $parent_id
  * @property integer $status
  */
-class Image extends \yii\db\ActiveRecord
+class Image extends ActiveRecord
 {
 
     /**
@@ -34,9 +35,15 @@ class Image extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['owner_id', 'width', 'height', 'parent_id', 'status'], 'integer'],
-            [['src', 'width', 'height', 'size'], 'required'],
-            [['owner', 'src', 'size'], 'string', 'max' => 255]
+            //create
+            [['src', 'width', 'height', 'size'], 'required', 'on' => self::SCENARIO_CREATE],
+            [['owner', 'src', 'size'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
+            [['owner_id', 'width', 'height', 'parent_id', 'status'], 'integer', 'on' => self::SCENARIO_CREATE],
+
+            //update
+            [['src', 'width', 'height', 'size'], 'required', 'on' => self::SCENARIO_UPDATE],
+            [['owner', 'src', 'size'], 'string', 'max' => 255, 'on' => self::SCENARIO_UPDATE],
+            [['owner_id', 'width', 'height', 'parent_id', 'status'], 'integer', 'on' => self::SCENARIO_UPDATE],
         ];
     }
 
@@ -66,6 +73,7 @@ class Image extends \yii\db\ActiveRecord
     {
         return new ImageQuery(get_called_class());
     }
+
 
 
     /* todo: сохранения файла на диск и генерация размеров. Добавить размеры в конфиг. Сделать подгрузку размеров по паренту. Валидация.

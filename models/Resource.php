@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-use yii\db\ActiveRecord;
+use app\components\ActiveRecord;
 
 /**
  * This is the model class for table "resource".
@@ -20,9 +20,6 @@ use yii\db\ActiveRecord;
  */
 class Resource extends ActiveRecord
 {
-    const SCENARIO_CREATE = 'create';
-    const SCENARIO_UPDATE = 'update';
-
     const STATUS_ACTIVE = 1;
     const STATUS_DISABLE = 0;
 
