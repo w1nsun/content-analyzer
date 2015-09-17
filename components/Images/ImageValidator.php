@@ -42,7 +42,10 @@ class ImageValidator extends Object
     protected $errors;
 
 
-
+    /**
+     * @param $src
+     * @return bool
+     */
     public function validate($src)
     {
         return ($this->isValidType($src) && $this->isValidWidthHeight($src));
@@ -142,4 +145,11 @@ class ImageValidator extends Object
         return implode(', ', $allowedTypesAsSrt);
     }
 
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 }

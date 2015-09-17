@@ -42,7 +42,7 @@ class ArticleController extends Controller
         if ($article->load(\Yii::$app->request->post())) {
 
             if($article->getIsNewRecord()){
-                $article->type = Article::TYPE_ARTICLE;
+                $article->type   = Article::TYPE_ARTICLE;
                 $article->status = Article::STATUS_ACTIVE;
             }
 

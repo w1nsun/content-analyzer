@@ -2,8 +2,6 @@
 
 namespace app\components\Images;
 
-use yii\validators\Validator;
-
 class ImageDownloader
 {
     /**
@@ -17,7 +15,7 @@ class ImageDownloader
     protected $to;
 
     /**
-     * @var Validator Validator for validate downloaded image
+     * @var ImageValidator for validate downloaded image
      */
     protected $validator;
 
@@ -33,31 +31,51 @@ class ImageDownloader
 
     /**
      * ImageDownloader constructor.
-     * @param Validator $validator
+     * @param ImageValidator $validator
      * @param string $tempPath
      */
-    public function __construct(Validator $validator, $tempPath)
+    public function __construct(ImageValidator $validator, $tempPath)
     {
         $this->validator = $validator;
         $this->tempPath  = $tempPath;
     }
 
+    /**
+     * @param $url
+     * @return $this
+     */
     public function from($url)
     {
         $this->url = $url;
         return $this;
     }
 
+    /**
+     * @param $to
+     * @return $this
+     */
     public function to($to)
     {
         $this->to = $to;
         return $this;
     }
 
+    /**
+     *
+     */
     public function save()
     {
+        $isValid = $this->validator->validate($this->runtimeFile);
+        if ($isValid) {
+
+        }
+
+        $this->delete($this->runtimeFile);
     }
 
+    /**
+     * Download image
+     */
     protected function download()
     {
         $fp = fopen ($this->generateRuntimeFileName(), 'w+');
@@ -77,15 +95,32 @@ class ImageDownloader
         fclose($fp);
     }
 
+    /**
+     * @return string
+     */
     public function getRuntimeFile()
     {
         return $this->runtimeFile;
     }
 
+    /**
+     * @return string
+     */
     protected function generateRuntimeFileName()
     {
-        $this->runtimeFile = $this->tempPath . '/' . uniqid('image_downloader') . '.tmp';
+        $ext = pathinfo($this->url, PATHINFO_EXTENSION);
+        $this->runtimeFile = $this->tempPath . '/' . uniqid('image_downloader') . '.' . $ext;
 
         return $this->runtimeFile;
+    }
+
+    /**
+     * @param $src
+     */
+    public function delete($src)
+    {
+        if (file_exists($src)) {
+            unlink($src);
+        }
     }
 }

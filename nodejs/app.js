@@ -31,18 +31,23 @@ function readRss(url, resource_id){
                     encoding:'binary'
                 },
                 (
-                    function(){
+                    function () {
 
-                        var article = articles[i];
+                        var article         = articles[i];
                         article.resource_id = resource_id;
-                        article.url = articles[i].link;
-                        article.title = articles[i].title.replace(/<!\[CDATA\[([^\]]+)]\]>/ig, "$1");
+                        article.url         = articles[i].link;
+                        article.title       = articles[i].title.replace(/<!\[CDATA\[([^\]]+)]\]>/ig, "$1");
                         article.description = articles[i].content.replace(/<blockquote.*?>(.*)<\/blockquote>/ig, '');
+                        article.image       = null;
 
                         return function (err, res, body) {
                             //Получили текст страницы, теперь исправляем кодировку и
                             //разбираем DOM с помощью Cheerio.
                             var $=Cheerio.load(Iconv.encode(Iconv.decode(new Buffer(body,'binary'), 'win1251'), 'utf8'));
+
+                            if ($('meta[property="og:image"]').length) {
+                                article.image = $('meta[property="og:image"]').attr('content');
+                            }
 
                             writeArticle(article);
                         }
