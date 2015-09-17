@@ -57,11 +57,11 @@ class Image extends ActiveRecord
             'owner' => Yii::t('app', 'Owner'),
             'owner_id' => Yii::t('app', 'Owner ID'),
             'src' => Yii::t('app', 'Src'),
-            'width' => Yii::t('app', 'Ширины'),
-            'height' => Yii::t('app', 'Высота'),
-            'size' => Yii::t('app', 'Размер'),
+            'width' => Yii::t('app', 'РЁРёСЂРёРЅР°'),
+            'height' => Yii::t('app', 'Р’С‹СЃРѕС‚Р°'),
+            'size' => Yii::t('app', 'Р Р°Р·РјРµСЂ'),
             'parent_id' => Yii::t('app', 'Parent ID'),
-            'status' => Yii::t('app', 'Статус'),
+            'status' => Yii::t('app', 'РЎС‚Р°С‚СѓСЃ'),
         ];
     }
 
@@ -73,9 +73,4 @@ class Image extends ActiveRecord
     {
         return new ImageQuery(get_called_class());
     }
-
-
-
-    /* todo: сохранения файла на диск и генерация размеров. Добавить размеры в конфиг. Сделать подгрузку размеров по паренту. Валидация.
-    */
 }

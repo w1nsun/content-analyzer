@@ -37,7 +37,7 @@ return [
     'Owner' => 'Owner',
     'Owner ID' => 'Owner ID',
     'Src' => 'Src',
-    'Ширины' => 'Width',
+    'Ширина' => 'Width',
     'Высота' => 'Height',
     'Размер' => 'Size',
     'Parent ID' => 'Parent ID',
