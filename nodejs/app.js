@@ -67,10 +67,11 @@ function writeArticle(article){
     var options = {
         url: Config.serviceDomain+'/api/article/create',
         formData: {
-            'Article[title]' : article.title,
-            'Article[url]' : article.url,
+            'Article[title]'       : article.title,
+            'Article[url]'         : article.url,
             'Article[description]' : article.description,
-            'Article[resource_id]' : article.resource_id
+            'Article[resource_id]' : article.resource_id,
+            'Article[image]'       : article.image
         },
         headers: {
             'Authorization': 'Bearer '+Config.serviceAccessToken

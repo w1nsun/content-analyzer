@@ -20,6 +20,12 @@ use app\components\ActiveRecord;
  */
 class Image extends ActiveRecord
 {
+    const OWNER_ARTICLE = 'article';
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_DELETED = 0;
+
+    const SIZE_ORIGINAL = 'original';
 
     /**
      * @inheritdoc
