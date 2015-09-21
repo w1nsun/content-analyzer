@@ -29,3 +29,4 @@ phpunit.phar
 
 /web/assets
 /web/runtime
+/web/files

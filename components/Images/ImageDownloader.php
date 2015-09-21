@@ -4,6 +4,8 @@ namespace app\components\Images;
 
 class ImageDownloader
 {
+    const SAVED_FILE_MODE = 0755;
+
     /**
      * @var string Link to download
      */
@@ -65,12 +67,17 @@ class ImageDownloader
      */
     public function save()
     {
+        $this->download();
+
         $isValid = $this->validator->validate($this->runtimeFile);
         if ($isValid) {
-
+            $result = file_put_contents($this->to, file_get_contents($this->runtimeFile)) === false ? false : true;
+            chmod($this->to, self::SAVED_FILE_MODE);
         }
 
         $this->delete($this->runtimeFile);
+
+        return $result;
     }
 
     /**
@@ -116,11 +123,14 @@ class ImageDownloader
 
     /**
      * @param $src
+     * @return bool
      */
     public function delete($src)
     {
         if (file_exists($src)) {
-            unlink($src);
+            return unlink($src);
         }
+
+        return false;
     }
 }
