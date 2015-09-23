@@ -1,8 +1,131 @@
-var Config = require('./config/config.json');
+var Config  = require('./config/config.json');
 var Cheerio = require('cheerio');
-var Iconv = require('iconv-lite');
+var Iconv   = require('iconv-lite');
 var Request = require('request');
-var Feed = require('feed-read');
+var Events  = require('events');
+
+
+
+var eventEmitter = new Events.EventEmitter();
+
+eventEmitter.on('test1', function(data){
+    console.log(data.data);
+});
+eventEmitter.emit('test1', {'ok':1, 'data':'test data'});
+
+return;
+
+
+
+
+var App = function () {
+
+    //vars
+
+    var read_resources_options = {
+        url     : Config.serviceDomain+'/api/resource',
+        timeout : 15,
+        headers : {
+            'Authorization': 'Bearer '+Config.serviceAccessToken
+        }
+    };
+
+    var event_emmiter = new Events.EventEmitter();
+
+
+    //functions
+
+    this.init = function () {
+        event_emmiter.on('resources_read', this.readRssFeed);
+
+    };
+
+    this.readResourceFeed = function (resources) {
+        for(var i = 0; i < resources.items.length; i++){
+
+
+            //readRss(resources.items[i].url, resources.items[i].id);
+
+            (function() {
+
+                var url = resources.items[i].url
+                var options = {
+                    uri: url,
+                    method: 'GET',
+                    encoding: 'binary',
+                    timeout: 10,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36'
+                    }
+                };
+
+                Request(options, function () {
+                    return function (err, res, body) {
+                        var $=Cheerio.load(Iconv.encode(Iconv.decode(new Buffer(body,'binary'), 'win1251'), 'utf8'));
+
+                        var title = $('item').find('title').text();
+
+
+                        if ($('meta[property="og:image"]').length) {
+                            article.image = $('meta[property="og:image"]').attr('content');
+                        }
+
+                        writeArticle(article);
+                    };
+                });
+
+
+            });
+
+
+
+
+
+        }
+    };
+
+    this.readResourcesFromApi = function () {
+        Request(read_resources_options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var resources = JSON.parse(body);
+
+                event_emmiter.emit('resources_read', resources);
+            }else{
+                console.log(error);
+                return;
+            }
+        });
+    };
+
+    this.readResources = function () {
+        var options = {
+            url: Config.serviceDomain+'/api/resource',
+            headers: {
+                'Authorization': 'Bearer '+Config.serviceAccessToken
+            }
+        };
+
+        function callback(error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var resources = JSON.parse(body);
+
+                for(var i=0; i<resources.items.length; i++){
+                    readRss(resources.items[i].url, resources.items[i].id);
+                }
+
+            }else{
+                console.log(error);
+                return;
+            }
+        }
+
+        Request(options, callback);
+    };
+
+}
+
+
+
 
 /**
  * Read RSS
@@ -26,9 +149,13 @@ function readRss(url, resource_id){
 
             Request(
                 {
-                    uri:articles[i].link,
-                    method:'GET',
-                    encoding:'binary'
+                    uri      : articles[i].link,
+                    method   : 'GET',
+                    encoding : 'binary',
+                    timeout  : 10,
+                    headers: {
+                        'User-Agent' : 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36'
+                    }
                 },
                 (
                     function () {
@@ -50,7 +177,7 @@ function readRss(url, resource_id){
                             }
 
                             writeArticle(article);
-                        }
+                        };
                     }
                 )()
             );
