@@ -1,8 +1,9 @@
 var Config  = require('./config/config.json');
 var Cheerio = require('cheerio');
-var Iconv   = require('iconv-lite');
 var Request = require('request');
 var Events  = require('events');
+var Zlib    = require('zlib');
+
 
 
 var App = function () {
@@ -117,38 +118,57 @@ var App = function () {
             });
         }
 
-        setTimeout(read, getRandomInt(300, 2000));
+        setTimeout(read, getRandomInt(getRandomInt(100, 1000), 2500));
     };
 
     this.feedItemRead = function (article) {
+
+        console.log('feedItemRead article: ');
+        console.log(article.url);
 
         var options  = {
                             uri      : article.url,
                             method   : 'GET',
                             encoding : 'binary',
                             timeout  : 10000,
+                            followAllRedirects : true,
+                            maxRedirects : 7,
                             headers: {
                                 'User-Agent'     : 'Mozilla/5.0 (Windows NT 6.3; WOW64) ' +
                                                     'AppleWebKit/537.36 (KHTML, like Gecko) ' +
                                                     'Chrome/45.0.2454.85 Safari/537.36',
 
-                                'Accept-Encoding': 'gzip;q=0,deflate,sdch'
+                                'Accept-Encoding': 'gzip,deflate'
                             }
                         };
 
         function read(err, res, body){
-
             if (!err && res.statusCode == 200) {
 
-                var $ = Cheerio.load(body);
+                var result = '';
+                var encoding = res.headers['content-encoding']
+                if (encoding && encoding == 'gzip') {
+                    Zlib.gunzip(body, function(err, decoded) {
+
+                        if (err)
+                            throw err;
+
+                        result = decoded;
+                    });
+                } else {
+                    result = body;
+                }
+
+                var $ = Cheerio.load(result);
 
                 if ($('meta[property="og:image"]').length) {
                     article.image = $('meta[property="og:image"]').attr('content');
                 }
 
                 event_emitter.emit('feed_item_read', article);
-            }else{
-                console.log('readFeedItem : ' + err);
+            } else {
+                console.log('feedItemRead Error:');
+                console.log(err);
                 return;
             }
 
@@ -166,7 +186,7 @@ var App = function () {
                 'Article[url]'         : article.url,
                 'Article[description]' : article.description,
                 'Article[resource_id]' : article.resource_id,
-                'Article[image]'       : article.image
+                'Article[image]'       : article.image ? article.image : ''
             },
             headers: {
                 'Authorization': 'Bearer '+Config.serviceAccessToken

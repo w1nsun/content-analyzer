@@ -116,7 +116,6 @@ class ArticleController extends Controller
 
         $imageDownloader = new ImageDownloader($imageValidator, $tempDir);
         $filename        = uniqid('article_image') . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
-        $pathToSave      = $this->imagePath;
         $fullPathToSave  = $this->getFullImagePath();
 
         if (!file_exists($fullPathToSave)) {
