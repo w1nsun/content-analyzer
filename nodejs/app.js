@@ -108,7 +108,8 @@ var App = function () {
                                             .children('description')
                                             .text()
                                             .replace(/<!\[CDATA\[([^\]]+)]\]>/ig, "$1")
-                                            .replace(/<blockquote.*?>(.*)<\/blockquote>/ig, '');
+                                            .replace(/<blockquote.*?>(.*)<\/blockquote>/ig, '')
+                                            .replace(/(?:\r\n|\r|\n|\t)/g, ' ');
 
                 article.url         = $(element)
                                             .children('link')
@@ -147,17 +148,21 @@ var App = function () {
 
                 var result = '';
                 var encoding = res.headers['content-encoding']
-                if (encoding && encoding == 'gzip') {
-                    Zlib.gunzip(body, function(err, decoded) {
+                //if (encoding && encoding == 'gzip') {
+                //    Zlib.gunzip(body, function(err, decoded) {
+                //
+                //        if (err){
+                //            console.log(err);
+                //            return;
+                //        }
+                //
+                //        result = decoded;
+                //    });
+                //} else {
+                //    result = body;
+                //}
+                result = body;
 
-                        if (err)
-                            throw err;
-
-                        result = decoded;
-                    });
-                } else {
-                    result = body;
-                }
 
                 var $ = Cheerio.load(result);
 
