@@ -41,6 +41,17 @@ class ImageValidator extends Object
      */
     protected $errors;
 
+    /**
+     * @param array $allowedTypes
+     * @param array $config
+     */
+    public function __construct(array $allowedTypes = [], array $config = [])
+    {
+        $this->allowedTypes = $allowedTypes;
+
+        parent::__construct($config);
+    }
+
 
     /**
      * @param $src

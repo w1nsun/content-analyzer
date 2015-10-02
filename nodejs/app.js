@@ -201,7 +201,7 @@ var App = function () {
         function callback(error, response, body){
             if (!error && response.statusCode == 200) {
 
-                console.log('Written' + article.url);
+                console.log('Written ' + article.url);
 
                 //var resources = JSON.parse(body);
             }else{

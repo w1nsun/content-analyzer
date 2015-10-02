@@ -53,8 +53,8 @@ class ArticleController extends Controller
 
             if ($article->save()) {
 
-                if (isset($request->post('Article')['image'])) {
-                    $imageUrl = $request->post('Article')['image'];
+                if (isset($request->post('Article')['image']) && !empty($request->post('Article')['image'])) {
+                    $imageUrl = trim($request->post('Article')['image']);
                     $imageFile= $this->saveArticleImage($imageUrl, $article);
 
                     if ($imageFile !== false) {
@@ -99,11 +99,9 @@ class ArticleController extends Controller
 
     protected function saveArticleImage($imageUrl, Article $article)
     {
-        $validatorParams = [
-            'allowedTypes' => IMAGETYPE_BMP, IMAGETYPE_JPEG, IMAGETYPE_PNG
-        ];
+        $allowedTypes = [IMAGETYPE_BMP, IMAGETYPE_JPEG, IMAGETYPE_PNG];
 
-        $imageValidator = new ImageValidator($validatorParams);
+        $imageValidator = new ImageValidator($allowedTypes);
         $tempDir = \Yii::getAlias('@app/runtime/tmp');
 
         if (!file_exists($tempDir)) {
