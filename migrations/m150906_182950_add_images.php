@@ -8,12 +8,12 @@ class m150906_182950_add_images extends Migration
     {
         $this->createTable('{{%image}}', [
             'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY',
-            'owner' => 'VARCHAR(255) NULL DEFAULT NULL',
+            'owner_type' => 'VARCHAR(255) NULL DEFAULT NULL',
             'owner_id' => 'INT UNSIGNED NULL DEFAULT NULL',
-            'src' => 'VARCHAR(255) NOT NULL',
-            'width' => 'INT UNSIGNED NOT NULL',
-            'height' => 'INT UNSIGNED NOT NULL',
-            'size' => 'VARCHAR(255) NOT NULL',
+            'src' => 'VARCHAR(255) NULL DEFAULT NULL',
+            'width' => 'INT UNSIGNED NULL DEFAULT NULL',
+            'height' => 'INT UNSIGNED NULL DEFAULT NULL',
+            'size' => 'VARCHAR(255) NULL DEFAULT NULL',
             'parent_id' => 'INT UNSIGNED NULL DEFAULT NULL',
             'status' => 'TINYINT UNSIGNED DEFAULT 0',
         ], 'ENGINE=INNODB');

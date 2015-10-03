@@ -22,7 +22,7 @@ var App = function () {
     //functions
     var getRandomInt = function (min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
-    }
+    };
 
     this.init = function () {
         event_emitter.on('resources_read', this.readResourceFeed);
@@ -64,7 +64,7 @@ var App = function () {
                     }else{
 
                         console.log('Parse rss feed error: ' + err);
-                        return;
+                        return 1;
 
                     }
                 });
@@ -81,7 +81,7 @@ var App = function () {
                 event_emitter.emit('resources_read', resources);
             }else{
                 console.log(error);
-                return;
+                return 1;
             }
         });
     };
@@ -119,7 +119,7 @@ var App = function () {
             });
         }
 
-        setTimeout(read, getRandomInt(getRandomInt(100, 1000), 2500));
+        setTimeout(read, getRandomInt(getRandomInt(100, 2000), 5000));
     };
 
     this.feedItemRead = function (article) {
@@ -138,10 +138,10 @@ var App = function () {
                             }
                         };
 
-        function read(err, res, body){
+        function read(err, res, body) {
             if (!err && res.statusCode == 200) {
                 var result = '';
-                var encoding = res.headers['content-encoding']
+                var encoding = res.headers['content-encoding'];
                 if (encoding && encoding == 'gzip') {
                     Zlib.gunzip(body, function(err, decoded) {
 
@@ -158,18 +158,19 @@ var App = function () {
 
                 var $ = Cheerio.load(result);
 
-                if ($('meta[property="og:image"]').length) {
-                    article.image = $('meta[property="og:image"]').attr('content');
+                var imageObj = $('meta[property="og:image"]');
+                if (imageObj.length) {
+                    article.image = imageObj.attr('content');
                 }
 
                 event_emitter.emit('feed_item_read', article);
             } else {
                 console.log('feedItemRead Error:');
                 console.log(err);
-                return;
+                return 1;
             }
 
-        };
+        }
 
         Request(options, read);
     };
@@ -196,10 +197,10 @@ var App = function () {
             if (!error && response.statusCode == 200) {
 
                 console.log('Written ' + article.url);
+                JSON.parse(body);
 
-                //var resources = JSON.parse(body);
             }else{
-                return;
+                return 1;
             }
         }
 

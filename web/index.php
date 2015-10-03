@@ -12,8 +12,7 @@ $application = new yii\web\Application($config);
 
 function vd($var, $exit = true)
 {
-    $dumper = new yii\helpers\BaseVarDumper();
-    echo $dumper::dump($var, 10, true);
+    \yii\helpers\BaseVarDumper::dump($var, 10, true);
     if ($exit)
         exit;
 }

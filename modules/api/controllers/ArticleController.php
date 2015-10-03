@@ -54,21 +54,27 @@ class ArticleController extends Controller
             if ($article->save()) {
 
                 if (isset($request->post('Article')['image']) && !empty($request->post('Article')['image'])) {
-                    $imageUrl = trim($request->post('Article')['image']);
-                    $imageFile= $this->saveArticleImage($imageUrl, $article);
 
-                    if ($imageFile !== false) {
+                    $image             = new Image(['scenario' => Image::SCENARIO_CREATE]);
+                    $image->owner_type = Image::OWNER_TYPE_ARTICLE;
+                    $image->owner_id   = $article->id;
+                    $image->size       = Image::SIZE_ORIGINAL;
+                    $image->status     = Image::STATUS_DELETED;
 
+                    $image->save();
+
+                    $imageUrl  = trim($request->post('Article')['image']);
+                    $imageFile = $this->saveArticleImage($imageUrl, $image);
+
+                    if ($imageFile === false) {
+                        $image->delete();
+                    } else {
                         list($width, $height) = getimagesize($this->getFullImagePath() . '/' . $imageFile);
 
-                        $image = new Image(['scenario' => Image::SCENARIO_CREATE]);
-                        $image->owner    = Image::OWNER_ARTICLE;
-                        $image->owner_id = $article->id;
-                        $image->src      = $image;
-                        $image->width    = $width;
-                        $image->height   = $height;
-                        $image->size     = Image::SIZE_ORIGINAL;
-                        $image->status   = Image::STATUS_ACTIVE;
+                        $image->src        = $imageFile;
+                        $image->width      = $width;
+                        $image->height     = $height;
+                        $image->status     = Image::STATUS_ACTIVE;
 
                         $image->save();
                     }
@@ -87,6 +93,7 @@ class ArticleController extends Controller
 
     protected function loadByUrlOrNew($url)
     {
+        /** @var Article $article */
         $article = Article::findOne(['url' => $url]);
 
         if ($article) {
@@ -97,7 +104,7 @@ class ArticleController extends Controller
         return new Article(['scenario' => Article::SCENARIO_CREATE]);
     }
 
-    protected function saveArticleImage($imageUrl, Article $article)
+    protected function saveArticleImage($imageUrl, Image $image)
     {
         $allowedTypes = [IMAGETYPE_BMP, IMAGETYPE_JPEG, IMAGETYPE_PNG];
 
@@ -114,7 +121,8 @@ class ArticleController extends Controller
 
         $imageDownloader = new ImageDownloader($imageValidator, $tempDir);
         $filename        = uniqid('article_image') . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
-        $fullPathToSave  = $this->getFullImagePath();
+        $path            = $this->createDir((string) $image->id);
+        $fullPathToSave  = $this->getFullImagePath() . $path;
 
         if (!file_exists($fullPathToSave)) {
             mkdir($fullPathToSave, 0777);
@@ -133,11 +141,45 @@ class ArticleController extends Controller
             return false;
         }
 
-        return $filename;
+        return $path . '/' . $filename;
     }
 
     protected function getFullImagePath()
     {
         return \Yii::getAlias('@app/web/' . $this->imagePath);
+    }
+
+    protected function createDir($id)
+    {
+        $maxFolders	    = 1000;
+        $foldersLevel   = 3;
+        $crc32Id	    = abs(crc32($id));
+        $crc32AsFolders = (string) ($crc32Id % $maxFolders);
+        $foldersLength  = strlen($crc32AsFolders);
+
+        if ($foldersLength < $foldersLevel) {
+            while ($foldersLength < $foldersLevel) {
+                $crc32AsFolders = '0' . $crc32AsFolders;
+                $foldersLength++;
+            }
+        }
+
+
+        $folder = '';
+        foreach (str_split($crc32AsFolders) as $folderFragment) {
+            $folder .= '/' . $folderFragment;
+        }
+
+        $directory = $this->getFullImagePath() . $folder;
+
+        if (file_exists($directory)) {
+            return $folder;
+        }
+
+        if (!mkdir($directory, 0777, true)) {
+            throw new \RuntimeException('Can\'t create directory: ' . $directory);
+        }
+
+        return $folder;
     }
 }
