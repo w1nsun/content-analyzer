@@ -124,9 +124,6 @@ var App = function () {
 
     this.feedItemRead = function (article) {
 
-        console.log('feedItemRead article: ');
-        console.log(article.url);
-
         var options  = {
                             uri      : article.url,
                             method   : 'GET',
@@ -137,32 +134,27 @@ var App = function () {
                             headers: {
                                 'User-Agent'     : 'Mozilla/5.0 (Windows NT 6.3; WOW64) ' +
                                                     'AppleWebKit/537.36 (KHTML, like Gecko) ' +
-                                                    'Chrome/45.0.2454.85 Safari/537.36',
-
-                                'Accept-Encoding': 'gzip,deflate'
+                                                    'Chrome/45.0.2454.85 Safari/537.36'
                             }
                         };
 
         function read(err, res, body){
             if (!err && res.statusCode == 200) {
-
                 var result = '';
                 var encoding = res.headers['content-encoding']
-                //if (encoding && encoding == 'gzip') {
-                //    Zlib.gunzip(body, function(err, decoded) {
-                //
-                //        if (err){
-                //            console.log(err);
-                //            return;
-                //        }
-                //
-                //        result = decoded;
-                //    });
-                //} else {
-                //    result = body;
-                //}
-                result = body;
+                if (encoding && encoding == 'gzip') {
+                    Zlib.gunzip(body, function(err, decoded) {
 
+                        if (err){
+                            console.log(err);
+                            return;
+                        }
+
+                        result = decoded.toString();
+                    });
+                } else {
+                    result = body;
+                }
 
                 var $ = Cheerio.load(result);
 
@@ -183,6 +175,8 @@ var App = function () {
     };
 
     this.writeArticle = function (article) {
+
+
 
         var options = {
             url: Config.serviceDomain + '/api/article/create',
