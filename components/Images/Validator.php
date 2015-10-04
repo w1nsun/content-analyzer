@@ -4,7 +4,7 @@ namespace app\components\Images;
 
 use yii\base\Object;
 
-class ImageValidator extends Object
+class Validator extends Object
 {
     /**
      * @var array php constants: IMAGETYPE_GIF, IMAGETYPE_JPEG

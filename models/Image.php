@@ -42,8 +42,7 @@ class Image extends ActiveRecord
     {
         return [
             //create
-//            [['src', 'width', 'height', 'size'], 'required', 'on' => self::SCENARIO_CREATE],
-            [['src', 'width', 'height', 'size'], 'default', 'value' => null, 'on' => self::SCENARIO_CREATE],
+            [['src', 'width', 'height', 'size'], 'required', 'on' => self::SCENARIO_CREATE],
             [['owner_type', 'src', 'size'], 'string', 'max' => 255, 'on' => self::SCENARIO_CREATE],
             [['owner_id', 'width', 'height', 'parent_id', 'status'], 'integer', 'on' => self::SCENARIO_CREATE],
 

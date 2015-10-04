@@ -2,8 +2,9 @@
 
 namespace app\modules\api\controllers;
 
-use app\components\Images\ImageDownloader;
-use app\components\Images\ImageValidator;
+use app\components\Images\Downloader;
+use app\components\Images\Handler;
+use app\components\Images\Validator;
 use app\models\Article;
 use app\models\Image;
 use yii\data\ActiveDataProvider;
@@ -42,7 +43,7 @@ class ArticleController extends Controller
     public function actionCreate()
     {
         $request = \Yii::$app->getRequest();
-        $article = $this->loadByUrlOrNew(\Yii::$app->request->post('Article')['url']);
+        $article = $this->loadByUrlOrNew($request->post('Article')['url']);
 
         if ($article->load($request->post())) {
 
@@ -53,31 +54,8 @@ class ArticleController extends Controller
 
             if ($article->save()) {
 
-                if (isset($request->post('Article')['image']) && !empty($request->post('Article')['image'])) {
-
-                    $image             = new Image(['scenario' => Image::SCENARIO_CREATE]);
-                    $image->owner_type = Image::OWNER_TYPE_ARTICLE;
-                    $image->owner_id   = $article->id;
-                    $image->size       = Image::SIZE_ORIGINAL;
-                    $image->status     = Image::STATUS_DELETED;
-
-                    $image->save();
-
-                    $imageUrl  = trim($request->post('Article')['image']);
-                    $imageFile = $this->saveArticleImage($imageUrl, $image);
-
-                    if ($imageFile === false) {
-                        $image->delete();
-                    } else {
-                        list($width, $height) = getimagesize($this->getFullImagePath() . '/' . $imageFile);
-
-                        $image->src        = $imageFile;
-                        $image->width      = $width;
-                        $image->height     = $height;
-                        $image->status     = Image::STATUS_ACTIVE;
-
-                        $image->save();
-                    }
+                if (!empty($request->post('image'))) {
+                    $this->saveImage($request->post('image'), $article);
                 }
 
                 return ['id' => $article->id];
@@ -85,7 +63,9 @@ class ArticleController extends Controller
         }
 
         $response = \Yii::$app->getResponse();
+
         $response->setStatusCode(500);
+
         $response->statusText ='Internal Server Error';
 
         return ['errors' => $article->getErrors()];
@@ -104,23 +84,63 @@ class ArticleController extends Controller
         return new Article(['scenario' => Article::SCENARIO_CREATE]);
     }
 
+    protected function saveImage($imageUrl, Article $article)
+    {
+        $params          = \Yii::$app->params['images']['article'];
+        $imageValidator  = new Validator($params['allowed_types']);
+        $imageDownloader = new Downloader($imageValidator, \Yii::getAlias($params['path']));
+        $imageHandler    = new Handler($imageDownloader, $params);
+        $file            = $imageHandler->handle($imageUrl);
+
+        if ($file === false) {
+            return false;
+        }
+
+        list($width, $height) = getimagesize($this->getFullImagePath() . '/' . $imageFile);
+
+        $image             = new Image(['scenario' => Image::SCENARIO_CREATE]);
+        $image->owner_type = Image::OWNER_TYPE_ARTICLE;
+        $image->owner_id   = $article->id;
+        $image->size       = Image::SIZE_ORIGINAL;
+        $image->src        = $imageFile;
+        $image->width      = $width;
+        $image->height     = $height;
+        $image->status     = Image::STATUS_ACTIVE;
+
+        $image->save();
+
+        $imageUrl  = trim($imageUrl);
+        $imageFile = $this->saveArticleImage($imageUrl, $image);
+
+        if ($imageFile === false) {
+            $image->delete();
+        } else {
+
+
+
+
+            $image->save();
+        }
+    }
+
     protected function saveArticleImage($imageUrl, Image $image)
     {
         $allowedTypes = [IMAGETYPE_BMP, IMAGETYPE_JPEG, IMAGETYPE_PNG];
 
-        $imageValidator = new ImageValidator($allowedTypes);
+        $imageValidator = new Validator($allowedTypes);
         $tempDir = \Yii::getAlias('@app/runtime/tmp');
 
         if (!file_exists($tempDir)) {
             mkdir($tempDir, 0775);
+
         }
 
         if (!is_writable($tempDir)) {
             chmod($tempDir, 0775);
         }
 
-        $imageDownloader = new ImageDownloader($imageValidator, $tempDir);
-        $filename        = uniqid('article_image') . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
+        $imageDownloader = new Downloader($imageValidator, $tempDir);
+        $filename        = uniqid('article_') . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
         $path            = $this->createDir((string) $image->id);
         $fullPathToSave  = $this->getFullImagePath() . $path;
 
@@ -163,7 +183,6 @@ class ArticleController extends Controller
                 $foldersLength++;
             }
         }
-
 
         $folder = '';
         foreach (str_split($crc32AsFolders) as $folderFragment) {

@@ -2,9 +2,9 @@
 
 namespace app\components\Images;
 
-class ImageDownloader
+class Downloader
 {
-    const SAVED_FILE_MODE = 0755;
+    const SAVED_FILE_MODE = 0775;
 
     /**
      * @var string Link to download
@@ -17,7 +17,7 @@ class ImageDownloader
     protected $to;
 
     /**
-     * @var ImageValidator for validate downloaded image
+     * @var Validator for validate downloaded image
      */
     protected $validator;
 
@@ -32,11 +32,10 @@ class ImageDownloader
     protected $tempPath = './../runtime/files';
 
     /**
-     * ImageDownloader constructor.
-     * @param ImageValidator $validator
+     * @param Validator $validator
      * @param string $tempPath
      */
-    public function __construct(ImageValidator $validator, $tempPath)
+    public function __construct(Validator $validator, $tempPath)
     {
         $this->validator = $validator;
         $this->tempPath  = $tempPath;
@@ -70,6 +69,7 @@ class ImageDownloader
         $this->download();
 
         $isValid = $this->validator->validate($this->runtimeFile);
+        $result  = false;
         if ($isValid) {
             $result = file_put_contents($this->to, file_get_contents($this->runtimeFile)) === false ? false : true;
             chmod($this->to, self::SAVED_FILE_MODE);
@@ -116,7 +116,7 @@ class ImageDownloader
     protected function generateRuntimeFileName()
     {
         $ext = pathinfo($this->url, PATHINFO_EXTENSION);
-        $this->runtimeFile = $this->tempPath . '/' . uniqid('image_downloader') . '.' . $ext;
+        $this->runtimeFile = $this->tempPath . '/' . uniqid('image_downloader_') . '.' . $ext;
 
         return $this->runtimeFile;
     }

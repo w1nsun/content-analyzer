@@ -4,16 +4,14 @@ var Request = require('request');
 var Events  = require('events');
 var Zlib    = require('zlib');
 
-
-
 var App = function () {
 
     //vars
     var read_resources_options = {
-        url     : Config.serviceDomain+'/api/resource',
+        url     : Config.serviceDomain + '/api/resource',
         timeout : 15000,
         headers : {
-            'Authorization': 'Bearer '+Config.serviceAccessToken
+            'Authorization' : 'Bearer ' + Config.serviceAccessToken
         }
     };
 
@@ -51,8 +49,6 @@ var App = function () {
                                         'User-Agent' : 'Mozilla/5.0 (Windows NT 6.3; WOW64) ' +
                                                         'AppleWebKit/537.36 (KHTML, like Gecko) ' +
                                                         'Chrome/45.0.2454.85 Safari/537.36',
-
-                                        'Accept-Encoding': 'gzip;q=0,deflate,sdch'
                                     }
                                 };
 
@@ -64,7 +60,7 @@ var App = function () {
                     }else{
 
                         console.log('Parse rss feed error: ' + err);
-                        return 1;
+                        return 0;
 
                     }
                 });
@@ -79,7 +75,7 @@ var App = function () {
                 var resources = JSON.parse(body);
 
                 event_emitter.emit('resources_read', resources);
-            }else{
+            } else {
                 console.log(error);
                 return 1;
             }
@@ -124,13 +120,14 @@ var App = function () {
 
     this.feedItemRead = function (article) {
 
+        var url      = article.url;
         var options  = {
-                            uri      : article.url,
+                            uri      : url,
                             method   : 'GET',
                             encoding : 'binary',
                             timeout  : 10000,
                             followAllRedirects : true,
-                            maxRedirects : 7,
+                            maxRedirects : 10,
                             headers: {
                                 'User-Agent'     : 'Mozilla/5.0 (Windows NT 6.3; WOW64) ' +
                                                     'AppleWebKit/537.36 (KHTML, like Gecko) ' +
@@ -163,11 +160,14 @@ var App = function () {
                     article.image = imageObj.attr('content');
                 }
 
+                //original URI, after all redirects
+                article.url = res.request.uri.href;
+
                 event_emitter.emit('feed_item_read', article);
             } else {
                 console.log('feedItemRead Error:');
                 console.log(err);
-                return 1;
+                return 0;
             }
 
         }
@@ -186,7 +186,7 @@ var App = function () {
                 'Article[url]'         : article.url,
                 'Article[description]' : article.description,
                 'Article[resource_id]' : article.resource_id,
-                'Article[image]'       : article.image ? article.image : ''
+                'image'                : article.image ? article.image : ''
             },
             headers: {
                 'Authorization': 'Bearer '+Config.serviceAccessToken
@@ -200,7 +200,7 @@ var App = function () {
                 JSON.parse(body);
 
             }else{
-                return 1;
+                return 0;
             }
         }
 
