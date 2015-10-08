@@ -35,29 +35,35 @@ $config = [
         'contentLanguage' => [
             'class' => 'app\components\ContentLanguage',
         ],
+        'fs' => [
+            'class'          => 'app\components\FileSystem',
+            'imagesDirAlias' => '@webroot/files',
+            'maxDirs'        => 1000,
+            'levelSubDirs'   => 3
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
         'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            'enablePrettyUrl'     => true,
+            'showScriptName'      => false,
             'enableStrictParsing' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api_user'],
                 'admin' => 'admin/dashboard',
-                '<controller:\w+>' => '<controller>/index',
-                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>'                       => '<controller>/index',
+                '<controller:\w+>/<id:\d+>'              => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>'          => '<controller>/<action>',
             ],
         ],
         'i18n' => [
             'translations' => [
                 'app*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
+                    'class'    => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@app/messages',
                     //'sourceLanguage' => 'en-US',
-                    'fileMap' => [
+                    'fileMap'  => [
                         'app' => 'app.php',
 //                        'app/error' => 'error.php',
                     ],
@@ -75,7 +81,7 @@ $config = [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
-                    'class' => 'yii\log\FileTarget',
+                    'class'  => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
             ],

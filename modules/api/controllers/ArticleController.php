@@ -96,7 +96,7 @@ class ArticleController extends Controller
             return false;
         }
 
-        list($width, $height) = getimagesize($this->getFullImagePath() . '/' . $imageFile);
+        list($width, $height) = getimagesize($this->getFullImagePath() . '/' . $file);
 
         $image             = new Image(['scenario' => Image::SCENARIO_CREATE]);
         $image->owner_type = Image::OWNER_TYPE_ARTICLE;
