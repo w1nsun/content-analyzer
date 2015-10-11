@@ -1,11 +1,11 @@
 <?php
 
-namespace app\components\Images;
+namespace app\components\image;
 
-class Downloader
+use yii\base\Component;
+
+class ImageDownloader extends Component
 {
-    const SAVED_FILE_MODE = 0775;
-
     /**
      * @var string Link to download
      */
@@ -17,7 +17,7 @@ class Downloader
     protected $to;
 
     /**
-     * @var Validator for validate downloaded image
+     * @var ImageValidator for validate downloaded image
      */
     protected $validator;
 
@@ -29,16 +29,17 @@ class Downloader
     /**
      * @var string
      */
-    protected $tempPath = './../runtime/files';
+    public $tmpAlias = '@app/runtime/files';
 
     /**
-     * @param Validator $validator
-     * @param string $tempPath
+     * @param ImageValidator $validator
+     * @param array $config
      */
-    public function __construct(Validator $validator, $tempPath)
+    public function __construct(ImageValidator $validator, $config = [])
     {
         $this->validator = $validator;
-        $this->tempPath  = $tempPath;
+
+        parent::__construct($config);
     }
 
     /**
@@ -64,15 +65,19 @@ class Downloader
     /**
      *
      */
-    public function save()
+    public function download()
     {
-        $this->download();
+        $this->request();
 
-        $isValid = $this->validator->validate($this->runtimeFile);
+        $error   = '';
+        $isValid = $this->validator->validate($this->runtimeFile, $error);
         $result  = false;
+
         if ($isValid) {
             $result = file_put_contents($this->to, file_get_contents($this->runtimeFile)) === false ? false : true;
-            chmod($this->to, self::SAVED_FILE_MODE);
+            chmod($this->to, 0777);
+        } else {
+            \Yii::error($error);
         }
 
         $this->delete($this->runtimeFile);
@@ -83,7 +88,7 @@ class Downloader
     /**
      * Download image
      */
-    protected function download()
+    protected function request()
     {
         $fp = fopen ($this->generateRuntimeFileName(), 'w+');
         $ch = curl_init($this->url);
@@ -116,7 +121,7 @@ class Downloader
     protected function generateRuntimeFileName()
     {
         $ext = pathinfo($this->url, PATHINFO_EXTENSION);
-        $this->runtimeFile = $this->tempPath . '/' . uniqid('image_downloader_') . '.' . $ext;
+        $this->runtimeFile = \Yii::getAlias($this->tmpAlias) . '/' . uniqid('image_downloader_') . '.' . $ext;
 
         return $this->runtimeFile;
     }
