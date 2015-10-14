@@ -2,6 +2,7 @@
 
 namespace app\modules\api\controllers;
 
+use app\components\FileSystem;
 use app\components\image\ImageDownloader;
 use app\components\image\ImageValidator;
 use app\models\Article;
@@ -85,12 +86,27 @@ class ArticleController extends Controller
 
     protected function saveImage($imageUrl, Article $article)
     {
-        /** @var \app\components\FileSystem $fileSystem */
+        /** @var FileSystem $fileSystem */
         $fileSystem = \Yii::$app->fs;
         $validator  = new ImageValidator();
         $downloader = new ImageDownloader($validator, $fileSystem);
+        $result     = $downloader
+                        ->from($imageUrl)
+                        ->to($this->generateSaveFilePath($imageUrl))
+                        ->download ();
 
-        $result = $downloader->from($imageUrl)->to(uniqid('article_'))->download();
+        if ($result) {
+            $image             = new Image(['scenario' => Image::SCENARIO_CREATE]);
+            $image->owner_type = Image::OWNER_TYPE_ARTICLE;
+            $image->owner_id   = $article->id;
+            $image->size       = Image::SIZE_ORIGINAL;
+            $image->src        = $imageFile;
+            $image->width      = $width;
+            $image->height     = $height;
+            $image->status     = Image::STATUS_ACTIVE;
+
+            $image->save();
+        }
 
 
 
@@ -99,41 +115,41 @@ class ArticleController extends Controller
 
 
 
-        $params          = \Yii::$app->params['images']['article'];
-        $imageValidator  = new Validator($params['allowed_types']);
-        $imageDownloader = new Downloader($imageValidator, \Yii::getAlias($params['path']));
-        $imageHandler    = new Handler($imageDownloader, $params);
-        $file            = $imageHandler->handle($imageUrl);
-
-        if ($file === false) {
-            return false;
-        }
-
-        list($width, $height) = getimagesize($this->getFullImagePath() . '/' . $file);
-
-        $image             = new Image(['scenario' => Image::SCENARIO_CREATE]);
-        $image->owner_type = Image::OWNER_TYPE_ARTICLE;
-        $image->owner_id   = $article->id;
-        $image->size       = Image::SIZE_ORIGINAL;
-        $image->src        = $imageFile;
-        $image->width      = $width;
-        $image->height     = $height;
-        $image->status     = Image::STATUS_ACTIVE;
-
-        $image->save();
-
-        $imageUrl  = trim($imageUrl);
-        $imageFile = $this->saveArticleImage($imageUrl, $image);
-
-        if ($imageFile === false) {
-            $image->delete();
-        } else {
-
-
-
-
-            $image->save();
-        }
+//        $params          = \Yii::$app->params['images']['article'];
+//        $imageValidator  = new Validator($params['allowed_types']);
+//        $imageDownloader = new Downloader($imageValidator, \Yii::getAlias($params['path']));
+//        $imageHandler    = new Handler($imageDownloader, $params);
+//        $file            = $imageHandler->handle($imageUrl);
+//
+//        if ($file === false) {
+//            return false;
+//        }
+//
+//        list($width, $height) = getimagesize($this->getFullImagePath() . '/' . $file);
+//
+//        $image             = new Image(['scenario' => Image::SCENARIO_CREATE]);
+//        $image->owner_type = Image::OWNER_TYPE_ARTICLE;
+//        $image->owner_id   = $article->id;
+//        $image->size       = Image::SIZE_ORIGINAL;
+//        $image->src        = $imageFile;
+//        $image->width      = $width;
+//        $image->height     = $height;
+//        $image->status     = Image::STATUS_ACTIVE;
+//
+//        $image->save();
+//
+//        $imageUrl  = trim($imageUrl);
+//        $imageFile = $this->saveArticleImage($imageUrl, $image);
+//
+//        if ($imageFile === false) {
+//            $image->delete();
+//        } else {
+//
+//
+//
+//
+//            $image->save();
+//        }
     }
 
     protected function saveArticleImage($imageUrl, Image $image)
@@ -213,5 +229,20 @@ class ArticleController extends Controller
         }
 
         return $folder;
+    }
+
+    /**
+     * @param string $imageUrl
+     * @return string
+     */
+    protected function generateSaveFilePath($imageUrl)
+    {
+        /** @var \app\components\FileSystem $fileSystem */
+        $fileSystem = \Yii::$app->fs;
+        $subDir     = \Yii::$app->fs->image()->createSubDirs(uniqid());
+        $imagesDir  = \Yii::$app->fs->image()->getDir();
+        $imageExt   = pathinfo($imageUrl, PATHINFO_EXTENSION);
+
+        return $imagesDir . '/' . $subDir . '/' . uniqid('article_') . '.' . $imageExt;
     }
 }

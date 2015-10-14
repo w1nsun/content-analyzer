@@ -218,7 +218,11 @@ class FileSystem extends Component
 
         $subDir = '';
         foreach (str_split($crc32AsDirs) as $dirFragment) {
-            $subDir .= '/' . $dirFragment;
+            if (!empty($subDir)) {
+                $subDir .= '/';
+            }
+
+            $subDir .= $dirFragment;
         }
 
         $directory = $this->dir . '/' . $subDir;

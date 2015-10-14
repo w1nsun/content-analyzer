@@ -33,11 +33,6 @@ class ImageDownloader extends Component
     protected $fileSystem;
 
     /**
-     * @var string
-     */
-    public $tmpAlias = '@app/runtime/files';
-
-    /**
      * @param ImageValidator $validator
      * @param FileSystem $fileSystem
      * @param array $config
@@ -62,8 +57,8 @@ class ImageDownloader extends Component
     }
 
     /**
-     * Save to file
-     * @param string $to filename without directory
+     * Save to path
+     * @param string $to filename
      * @return $this
      */
     public function to($to)
@@ -85,15 +80,7 @@ class ImageDownloader extends Component
         $result  = false;
 
         if ($isValid) {
-
-            $idSubDirs = uniqid() . $this->url;
-            $subDir    = $this->fileSystem->image()->createSubDirs($idSubDirs);
-
-            if (substr($subDir, -1) !== '/') {
-                $subDir .= '/';
-            }
-
-            $result = $this->fileSystem->image()->file($this->runtimeFile)->saveAs($subDir . $this->to);
+            $result = $this->fileSystem->image()->file($this->runtimeFile)->saveAs($this->to);
         } else {
             \Yii::error($error);
         }
@@ -139,7 +126,8 @@ class ImageDownloader extends Component
     protected function generateRuntimeFileName()
     {
         $ext = pathinfo($this->url, PATHINFO_EXTENSION);
-        $this->runtimeFile = \Yii::getAlias($this->tmpAlias) . '/' . uniqid('image_downloader_') . '.' . $ext;
+        $dir = pathinfo($this->to, PATHINFO_DIRNAME);
+        $this->runtimeFile = $dir . '/' . uniqid('runtime_') . '.' . $ext;
 
         return $this->runtimeFile;
     }
