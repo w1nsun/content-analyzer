@@ -2,9 +2,8 @@
 
 namespace app\modules\api\controllers;
 
-use app\components\Images\Downloader;
-use app\components\Images\Handler;
-use app\components\Images\Validator;
+use app\components\image\ImageDownloader;
+use app\components\image\ImageValidator;
 use app\models\Article;
 use app\models\Image;
 use yii\data\ActiveDataProvider;
@@ -86,6 +85,20 @@ class ArticleController extends Controller
 
     protected function saveImage($imageUrl, Article $article)
     {
+        /** @var \app\components\FileSystem $fileSystem */
+        $fileSystem = \Yii::$app->fs;
+        $validator  = new ImageValidator();
+        $downloader = new ImageDownloader($validator, $fileSystem);
+
+        $result = $downloader->from($imageUrl)->to(uniqid('article_'))->download();
+
+
+
+        //todo: сохранение в БД
+
+
+
+
         $params          = \Yii::$app->params['images']['article'];
         $imageValidator  = new Validator($params['allowed_types']);
         $imageDownloader = new Downloader($imageValidator, \Yii::getAlias($params['path']));

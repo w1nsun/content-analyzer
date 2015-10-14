@@ -2,6 +2,7 @@
 
 namespace app\components\image;
 
+use app\components\FileSystem;
 use yii\base\Component;
 
 class ImageDownloader extends Component
@@ -27,17 +28,24 @@ class ImageDownloader extends Component
     protected $runtimeFile;
 
     /**
+     * @var FileSystem
+     */
+    protected $fileSystem;
+
+    /**
      * @var string
      */
     public $tmpAlias = '@app/runtime/files';
 
     /**
      * @param ImageValidator $validator
+     * @param FileSystem $fileSystem
      * @param array $config
      */
-    public function __construct(ImageValidator $validator, $config = [])
+    public function __construct(ImageValidator $validator, FileSystem $fileSystem, $config = [])
     {
-        $this->validator = $validator;
+        $this->validator  = $validator;
+        $this->fileSystem = $fileSystem;
 
         parent::__construct($config);
     }
@@ -49,16 +57,19 @@ class ImageDownloader extends Component
     public function from($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
     /**
-     * @param $to
+     * Save to file
+     * @param string $to filename without directory
      * @return $this
      */
     public function to($to)
     {
         $this->to = $to;
+
         return $this;
     }
 
@@ -74,8 +85,15 @@ class ImageDownloader extends Component
         $result  = false;
 
         if ($isValid) {
-            $result = file_put_contents($this->to, file_get_contents($this->runtimeFile)) === false ? false : true;
-            chmod($this->to, 0777);
+
+            $idSubDirs = uniqid() . $this->url;
+            $subDir    = $this->fileSystem->image()->createSubDirs($idSubDirs);
+
+            if (substr($subDir, -1) !== '/') {
+                $subDir .= '/';
+            }
+
+            $result = $this->fileSystem->image()->file($this->runtimeFile)->saveAs($subDir . $this->to);
         } else {
             \Yii::error($error);
         }
@@ -130,7 +148,7 @@ class ImageDownloader extends Component
      * @param $src
      * @return bool
      */
-    public function delete($src)
+    protected function delete($src)
     {
         if (file_exists($src)) {
             return unlink($src);

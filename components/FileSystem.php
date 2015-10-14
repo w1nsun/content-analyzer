@@ -122,14 +122,20 @@ class FileSystem extends Component
     /**
      * Save file $fromFile as $saveFileName
      *
-     * @param $saveFileName
+     * @param $saveFile
      * @return bool
      */
-    public function saveAs($saveFileName)
+    public function saveAs($saveFile)
     {
         $this->beforeSave();
 
-        $result = file_put_contents($this->dir . '/' . $saveFileName, file_get_contents($this->file)) === true ? true : false;
+        $saveFile = str_replace('\\\\', '/', $saveFile);
+
+        if (substr($this->dir, -1) !== '/' && substr($saveFile, 0, 1) !== '/') {
+            $this->dir .= '/';
+        }
+
+        $result = file_put_contents($this->dir . $saveFile, file_get_contents($this->file)) === true ? true : false;
 
         if ($result === false) {
             throw new \RuntimeException(\Yii::t('component', 'Ошибка при сохранении файла'));
