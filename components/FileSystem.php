@@ -135,10 +135,10 @@ class FileSystem extends Component
             $this->dir .= '/';
         }
 
-        $result = file_put_contents($this->dir . $saveFile, file_get_contents($this->file)) === true ? true : false;
+        $result = file_put_contents($saveFile, file_get_contents($this->file)) ? true : false;
 
         if ($result === false) {
-            throw new \RuntimeException(\Yii::t('component', 'Ошибка при сохранении файла'));
+            throw new \RuntimeException(\Yii::t('component', 'Ошибка при сохранении файла: {file}', ['file' => $saveFile]));
         }
 
         return $this;
@@ -218,11 +218,7 @@ class FileSystem extends Component
 
         $subDir = '';
         foreach (str_split($crc32AsDirs) as $dirFragment) {
-            if (!empty($subDir)) {
-                $subDir .= '/';
-            }
-
-            $subDir .= $dirFragment;
+            $subDir .= '/' . $dirFragment;
         }
 
         $directory = $this->dir . '/' . $subDir;
@@ -235,7 +231,7 @@ class FileSystem extends Component
             throw new \RuntimeException(\Yii::t('component', 'Невозможно создать директорию {dir}', ['dir' => $directory]));
         }
 
-        return $subDir;
+        return ltrim($subDir, '/');
     }
 
     /**

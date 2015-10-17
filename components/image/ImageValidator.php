@@ -39,9 +39,7 @@ class ImageValidator extends Validator
 
     protected function validateValue($file)
     {
-        $result = parent::validateValue($file);
-
-        return empty($result) ? $this->validateImage($file) : $result;
+        return $this->validateImage($file);
     }
 
     /**
