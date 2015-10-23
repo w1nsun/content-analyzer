@@ -8,15 +8,15 @@ class m150801_083356_create_articles_table extends Migration
     public function up()
     {
         $this->createTable('{{%article}}', [
-            'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY',
+            'id'          => 'INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY',
             'resource_id' => 'INT UNSIGNED NOT NULL',
-            'title' => Schema::TYPE_TEXT . ' NOT NULL',
+            'title'       => Schema::TYPE_TEXT . ' NOT NULL',
             'description' => Schema::TYPE_TEXT . ' NOT NULL',
-            'url' => Schema::TYPE_TEXT . ' NOT NULL',
-            'type' => Schema::TYPE_STRING . ' NOT NULL',
-            'updated_at' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
-            'created_at' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
-            'status' => 'TINYINT UNSIGNED DEFAULT 0',
+            'url'         => Schema::TYPE_TEXT . ' NOT NULL',
+            'type'        => Schema::TYPE_STRING . ' NOT NULL',
+            'updated_at'  => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
+            'created_at'  => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
+            'status'      => 'TINYINT UNSIGNED NOT NULL DEFAULT 0',
         ], 'ENGINE=INNODB');
 
         $this->createIndex('idx_resource_id', '{{%article}}', 'resource_id');
