@@ -26,7 +26,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass'   => 'app\models\WebUser',
+            'identityClass'   => 'app\models\User',
             'enableAutoLogin' => true,
         ],
         'contentCountry' => [

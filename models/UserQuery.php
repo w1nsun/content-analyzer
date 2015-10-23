@@ -5,11 +5,11 @@ namespace app\models;
 use app\components\ActiveQuery;
 
 /**
- * This is the ActiveQuery class for [[Image]].
+ * This is the ActiveQuery class for [[Resource]].
  *
- * @see Image
+ * @see Resource
  */
-class ImageQuery extends ActiveQuery
+class UserQuery extends ActiveQuery
 {
     /*public function active()
     {
@@ -19,7 +19,7 @@ class ImageQuery extends ActiveQuery
 
     /**
      * @inheritdoc
-     * @return Image[]|array
+     * @return Resource[]|array
      */
     public function all($db = null)
     {
@@ -28,7 +28,7 @@ class ImageQuery extends ActiveQuery
 
     /**
      * @inheritdoc
-     * @return Image|array|null
+     * @return Resource|array|null
      */
     public function one($db = null)
     {
