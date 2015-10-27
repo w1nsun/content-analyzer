@@ -32,32 +32,37 @@ AppAsset::register($this);
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
-            echo Nav::widget([
-                'encodeLabels' => false,
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    ['label' => Yii::t('app', 'Контакты'), 'url' => ['/site/contact']],
-                    [
-                        'label' => '<i class="glyphicon glyphicon-cog"></i>',
-                        'items' => [
-                            [
-                                'label'   => Yii::t('app', 'Войти'),
-                                'url'     => ['/site/login'],
-                                'visible' => Yii::$app->user->isGuest
-                            ],
-                            [
-                                'label'       => Yii::t('app', 'Выйти ({user})', ['user' => Yii::$app->user->identity->username]),
-                                'url'         => ['/site/logout'],
-                                'visible'     => !Yii::$app->user->isGuest,
-                                'linkOptions' => ['data-method' => 'post']
-                            ]
-                        ]
-                    ],
-                ],
-            ]);
-            NavBar::end();
         ?>
+        <?php
+            $nav_sub_items = [
+                [
+                    'label'   => Yii::t('app', 'Войти'),
+                    'url'     => ['/site/login'],
+                    'visible' => Yii::$app->user->isGuest
+                ]
+            ];
 
+            if (!Yii::$app->user->isGuest) {
+                $nav_sub_items[] = [
+                    'label'       => Yii::t('app', 'Выйти ({user})', ['user' => Yii::$app->user->identity->username]),
+                    'url'         => ['/site/logout'],
+                    'linkOptions' => ['data-method' => 'post']
+                ];
+            }
+        ?>
+        <?= Nav::widget([
+            'encodeLabels' => false,
+            'options' => ['class' => 'navbar-nav navbar-right'],
+            'items' => [
+                ['label' => Yii::t('app', 'Контакты'), 'url' => ['/site/contact']],
+                [
+                    'label' => '<i class="glyphicon glyphicon-cog"></i> ' . Yii::t('app', 'Панель управления'),
+                    'items' => $nav_sub_items
+                ],
+            ],
+        ])
+        ?>
+        <?php NavBar::end()?>
         <div class="container">
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],

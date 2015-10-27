@@ -18,6 +18,9 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    const STATUS_ACTIVE  = 1;
+    const STATUS_DISABLE = 0;
+
     /**
      * @inheritdoc
      */
@@ -118,21 +121,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @param bool $insert
-     * @return bool
-     */
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($this->isNewRecord) {
-                $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * @param $password
      * @return string
      * @throws \yii\base\Exception
@@ -141,5 +129,17 @@ class User extends ActiveRecord implements IdentityInterface
     public function getPasswordHash($password)
     {
         return Yii::$app->getSecurity()->generatePasswordHash($password, 15);
+    }
+
+
+
+
+
+
+    public function register()
+    {
+        $this->password = $this->getPasswordHash($this->password);
+        $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
+        $this->status   = self::STATUS_ACTIVE;
     }
 }
