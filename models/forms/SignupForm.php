@@ -4,7 +4,7 @@ namespace app\models\forms;
 
 use yii\base\Model;
 
-class RegisterForm extends Model
+class SignupForm extends Model
 {
     /**
      * @var string
