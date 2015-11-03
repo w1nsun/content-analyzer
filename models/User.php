@@ -71,7 +71,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return self::find()->one($id);
+        return self::findOne($id);
     }
 
     /**
@@ -81,7 +81,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return self::find()->one(['access_token' => $token]);
+        return self::findOne(['access_token' => $token]);
     }
 
     /**
@@ -117,7 +117,16 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return Yii::$app->getSecurity()->validatePassword($this->password, $this->getPasswordHash($password));
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password);
+    }
+
+    /**
+     * @param $email
+     * @return array|null|Resource
+     */
+    public static function findByEmail($email)
+    {
+        return self::findOne(['email' => $email]);
     }
 
     /**
@@ -131,15 +140,15 @@ class User extends ActiveRecord implements IdentityInterface
         return Yii::$app->getSecurity()->generatePasswordHash($password, 15);
     }
 
-
-
-
-
-
+    /**
+     * Sign up user
+     */
     public function register()
     {
         $this->password = $this->getPasswordHash($this->password);
         $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
         $this->status   = self::STATUS_ACTIVE;
+
+        $this->save(false);
     }
 }

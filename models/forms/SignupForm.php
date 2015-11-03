@@ -3,6 +3,7 @@
 namespace app\models\forms;
 
 use yii\base\Model;
+use Yii;
 
 class SignupForm extends Model
 {
@@ -53,5 +54,17 @@ class SignupForm extends Model
         ) {
             $this->addError($attribute, \Yii::t('app', 'Значение пароля недопустимо'));
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        return [
+            'email'           => Yii::t('app', 'Email'),
+            'password'        => Yii::t('app', 'Пароль'),
+            'repeat_password' => Yii::t('app', 'Повторите пароль'),
+        ];
     }
 }

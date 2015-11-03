@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\forms\SignupForm;
+use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -98,6 +99,19 @@ class SiteController extends Controller
     public function actionSignup()
     {
         $model = new SignupForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            $user           = new User();
+            $user->email    = $model->email;
+            $user->password = $model->password;
+
+            $user->register();
+
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Вы успешно зарегистрированы'));
+
+            return $this->refresh();
+        }
 
         return $this->render('sign_up_form', [
             'model' => $model

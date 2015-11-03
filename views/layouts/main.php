@@ -44,7 +44,7 @@ AppAsset::register($this);
 
             if (!Yii::$app->user->isGuest) {
                 $nav_sub_items[] = [
-                    'label'       => Yii::t('app', 'Выйти ({user})', ['user' => Yii::$app->user->identity->username]),
+                    'label'       => Yii::t('app', 'Выйти ({user})', ['user' => Yii::$app->user->identity->email]),
                     'url'         => ['/site/logout'],
                     'linkOptions' => ['data-method' => 'post']
                 ];

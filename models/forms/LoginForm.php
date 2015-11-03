@@ -13,12 +13,12 @@ class LoginForm extends Model
 {
 
     /**
-     * @var username
+     * @var string
      */
     public $username;
 
     /**
-     * @var password
+     * @var string
      */
     public $password;
 
@@ -63,7 +63,7 @@ class LoginForm extends Model
             $user = $this->getUser();
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, Yii::t('app', 'Неправильный email или пароль'));
             }
         }
     }
@@ -84,12 +84,12 @@ class LoginForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return WebUser|null
+     * @return User|null
      */
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findByEmail($this->username);
         }
 
         return $this->_user;
