@@ -1,4 +1,5 @@
 <?php
+use app\components\Roles;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -34,13 +35,14 @@ AppAsset::register($this);
             ]);
         ?>
         <?php
-            $nav_sub_items = [
-                [
-                    'label'   => Yii::t('app', 'Войти'),
-                    'url'     => ['/site/login'],
-                    'visible' => Yii::$app->user->isGuest
-                ]
-            ];
+            $nav_sub_items = [];
+
+            if (Yii::$app->user->can(Roles::ADMIN)) {
+                $nav_sub_items[] = [
+                    'label'       => Yii::t('app', 'Админка'),
+                    'url'         => ['/admin'],
+                ];
+            }
 
             if (!Yii::$app->user->isGuest) {
                 $nav_sub_items[] = [
@@ -57,8 +59,14 @@ AppAsset::register($this);
                 ['label' => Yii::t('app', 'Контакты'), 'url' => ['/site/contact']],
                 [
                     'label' => '<i class="glyphicon glyphicon-cog"></i> ' . Yii::t('app', 'Панель управления'),
-                    'items' => $nav_sub_items
+                    'items' => $nav_sub_items,
+                    'visible' => !Yii::$app->user->isGuest
                 ],
+                [
+                    'label'   => Yii::t('app', 'Войти'),
+                    'url'     => ['/site/login'],
+                    'visible' => Yii::$app->user->isGuest
+                ]
             ],
         ])
         ?>

@@ -3,6 +3,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\components\Roles;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 
@@ -19,7 +20,7 @@ class BaseController extends Controller
                     // allow authenticated users
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [Roles::ADMIN],
                     ],
                     // everything else is denied by default
                 ],

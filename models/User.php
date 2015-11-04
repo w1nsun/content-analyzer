@@ -122,7 +122,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * @param $email
-     * @return array|null|Resource
+     * @return null|self
      */
     public static function findByEmail($email)
     {
