@@ -9,6 +9,7 @@ use yii\filters\AccessControl;
 
 class BaseController extends Controller
 {
+    public $layout = 'main';
 
     public function behaviors()
     {

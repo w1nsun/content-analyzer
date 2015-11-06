@@ -53,8 +53,8 @@ $config = [
             'enableStrictParsing' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'api_user'],
-                'admin' => 'admin/dashboard',
-                'signup' => 'site/signup',
+                '/admin' => '/admin/dashboard/index',
+                '/signup' => '/site/signup',
                 '<controller:\w+>'                       => '<controller>/index',
                 '<controller:\w+>/<id:\d+>'              => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',

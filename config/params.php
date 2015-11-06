@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'projectName' => 'ETrends',
     'adminEmail' => 'admin@example.com',
     'image_path' => 'web/images',
     'images'     => [
