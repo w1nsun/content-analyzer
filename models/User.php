@@ -50,10 +50,10 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'id'           => Yii::t('app', 'ID'),
             'email'        => Yii::t('app', 'Email'),
-            'password'     => Yii::t('app', 'Password'),
+            'password'     => Yii::t('app', 'Пароль'),
             'auth_key'     => Yii::t('app', 'Auth Key'),
             'access_token' => Yii::t('app', 'Access Token'),
-            'status'       => Yii::t('app', 'Status'),
+            'status'       => Yii::t('app', 'Статус'),
         ];
     }
 
@@ -150,5 +150,20 @@ class User extends ActiveRecord implements IdentityInterface
         $this->status   = self::STATUS_ACTIVE;
 
         $this->save(false);
+    }
+
+
+    /**
+     * @param null $id
+     * @return array
+     */
+    public static function enumStatus($id = null)
+    {
+        $enum = [
+            self::STATUS_ACTIVE => Yii::t('app', 'Активен'),
+            self::STATUS_DISABLE => Yii::t('app', 'Заблокирован'),
+        ];
+
+        return $id === null ? $enum : $enum[$id];
     }
 }
