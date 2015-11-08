@@ -15,7 +15,7 @@ class m150906_182950_add_images extends Migration
             'height'     => 'INT UNSIGNED NOT NULL',
             'size'       => 'VARCHAR(255) NOT NULL',
             'parent_id'  => 'INT UNSIGNED NULL DEFAULT NULL',
-            'status'     => 'TINYINT UNSIGNED DEFAULT 0',
+            'status'     => 'TINYINT UNSIGNED NOT NULL DEFAULT 0',
         ], 'ENGINE=INNODB');
     }
 

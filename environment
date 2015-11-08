@@ -41,3 +41,9 @@ npm install request --no-bin-links
 
 cd /var/www/tests/
 codecept run (unit|)
+
+
+8. RBAC
+
+yii migrate --migrationPath=@yii/rbac/migrations
+yii rbac/init

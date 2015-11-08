@@ -13,7 +13,7 @@ class m151023_200918_add_user extends Migration
              'password'     => 'VARCHAR(255) NOT NULL',
              'auth_key'     => 'VARCHAR(255) NOT NULL',
              'access_token' => 'VARCHAR(512) NOT NULL',
-             'status'       => 'TINYINT UNSIGNED DEFAULT 0',
+             'status'       => 'TINYINT UNSIGNED NOT NULL DEFAULT 0',
          ], 'ENGINE=INNODB');
     }
 
