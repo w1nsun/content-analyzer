@@ -91,9 +91,9 @@ var App = function () {
 
                 var article = {};
 
-                article.resource_id     = resource_id;
-                article.image           = null;
-                article.rss_categories  = [];
+                article.resource_id = resource_id;
+                article.image       = null;
+                article.tags        = [];
 
                 article.title       = $(element)
                                             .children('title')
@@ -116,7 +116,7 @@ var App = function () {
                                 .text()
                                 .replace(/<!\[CDATA\[([^\]]+)]\]>/ig, "$1");
 
-                    article.rss_categories.push(res);
+                    article.tags.push(res);
                 });
 
                 event_emitter.emit('feed_item_parse', article);
@@ -185,7 +185,7 @@ var App = function () {
 
     this.writeArticle = function (article) {
 
-
+        console.log(JSON.stringify(article.tags));
 
         var options = {
             url: 'http://' + Config.serviceDomain + '/api/article/create',
@@ -194,10 +194,11 @@ var App = function () {
                 'Article[url]'         : article.url,
                 'Article[description]' : article.description,
                 'Article[resource_id]' : article.resource_id,
-                'image'                : article.image ? article.image : ''
+                'image'                : article.image ? article.image : '',
+                'tags'                 : JSON.stringify(article.tags)
             },
             headers: {
-                'Authorization': 'Bearer '+Config.serviceAccessToken
+                'Authorization': 'Bearer ' + Config.serviceAccessToken
             }
         };
 

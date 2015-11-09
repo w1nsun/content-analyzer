@@ -72,4 +72,13 @@ class Category extends \yii\db\ActiveRecord
     {
         return new CategoryQuery(get_called_class());
     }
+
+    /**
+     * @inheritdoc
+     * @return CategoryQuery the active query used by this AR class.
+     */
+    public static function query()
+    {
+        return new CategoryQuery(get_called_class());
+    }
 }

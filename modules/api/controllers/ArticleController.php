@@ -6,6 +6,7 @@ use app\components\FileSystem;
 use app\components\image\ImageDownloader;
 use app\components\image\ImageValidator;
 use app\models\Article;
+use app\models\Category;
 use app\models\Image;
 use yii\data\ActiveDataProvider;
 
@@ -63,6 +64,7 @@ class ArticleController extends Controller
             }
 
             if ($article->save()) {
+                $this->extractAndSaveTags($request);
                 if (!empty($request->post('image'))) {
                     $this->saveImage($request->post('image'), $article);
                 }
@@ -123,7 +125,6 @@ class ArticleController extends Controller
 
             $image->save();
         }
-
     }
 
     /**
@@ -143,5 +144,21 @@ class ArticleController extends Controller
             'full_path'     => $imagesDir . '/' . $subDir . '/' . $imageName,
             'relative_path' => $subDir . '/' . $imageName,
         ];
+    }
+
+    /**
+     * @param \yii\web\Request $request
+     * @return null
+     */
+    protected function extractAndSaveTags(\yii\web\Request $request)
+    {
+        $tags = json_decode($request->post()['tags']);
+
+        if (empty($tags)) {
+            return null;
+        }
+
+        $tags = array_map('strtolower', $tags);
+        Category::query()->addTags($tags);
     }
 }
