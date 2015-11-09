@@ -14,7 +14,7 @@ class m150718_132240_create_resources_table extends Migration
             'type' => Schema::TYPE_TEXT.' NOT NULL',
             'updated_at' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
             'created_at' => Schema::TYPE_INTEGER . ' UNSIGNED NOT NULL',
-            'status' => 'TINYINT UNSIGNED DEFAULT 0',
+            'status' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0',
         ], 'ENGINE=INNODB');
     }
 

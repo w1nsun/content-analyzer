@@ -41,3 +41,11 @@ npm install request --no-bin-links
 
 cd /var/www/tests/
 codecept run (unit|)
+
+8.
+прописать access_token для nodejs app в config.json и local_params.php
+
+9.
+запусить инициализацию ролей
+yii rbac/init
+yii user/add-api-user

@@ -8,7 +8,7 @@ var App = function () {
 
     //vars
     var read_resources_options = {
-        url     : Config.serviceDomain + '/api/resource',
+        url     : 'http://' + Config.serviceDomain + '/api/resource',
         timeout : 15000,
         headers : {
             'Authorization' : 'Bearer ' + Config.serviceAccessToken
@@ -27,7 +27,6 @@ var App = function () {
         event_emitter.on('feed_read', this.feedRead);
         event_emitter.on('feed_item_parse', this.feedItemRead);
         event_emitter.on('feed_item_read', this.writeArticle);
-
     };
 
     this.run = function () {
@@ -92,8 +91,9 @@ var App = function () {
 
                 var article = {};
 
-                article.resource_id = resource_id;
-                article.image       = null;
+                article.resource_id     = resource_id;
+                article.image           = null;
+                article.rss_categories  = [];
 
                 article.title       = $(element)
                                             .children('title')
@@ -110,6 +110,14 @@ var App = function () {
                 article.url         = $(element)
                                             .children('link')
                                             .text();
+
+                $(element).children('category').each(function (idx, category) {
+                    var res = $(category)
+                                .text()
+                                .replace(/<!\[CDATA\[([^\]]+)]\]>/ig, "$1");
+
+                    article.rss_categories.push(res);
+                });
 
                 event_emitter.emit('feed_item_parse', article);
             });
@@ -180,7 +188,7 @@ var App = function () {
 
 
         var options = {
-            url: Config.serviceDomain + '/api/article/create',
+            url: 'http://' + Config.serviceDomain + '/api/article/create',
             formData: {
                 'Article[title]'       : article.title,
                 'Article[url]'         : article.url,

@@ -142,6 +142,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Sign up user
+     * @return bool
      */
     public function register()
     {
@@ -149,7 +150,7 @@ class User extends ActiveRecord implements IdentityInterface
         $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
         $this->status   = self::STATUS_ACTIVE;
 
-        $this->save(false);
+        return $this->save(false);
     }
 
 

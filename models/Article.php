@@ -14,6 +14,7 @@ use app\components\ActiveRecord;
  * @property string $description
  * @property string $url
  * @property string $type
+ * @property string $category_id
  * @property integer $updated_at
  * @property integer $created_at
  * @property integer $status
@@ -44,13 +45,13 @@ class Article extends ActiveRecord
         return [
 
             //create
-            [['resource_id'], 'filter', 'filter' => 'intval', 'on' => self::SCENARIO_CREATE],
+            [['resource_id', 'category_id'], 'filter', 'filter' => 'intval', 'on' => self::SCENARIO_CREATE],
             [['title'], 'string', 'length' => ['max' => 1024], 'on' => self::SCENARIO_CREATE],
             [['description'], 'filter', 'filter' => 'strip_tags', 'on' => self::SCENARIO_CREATE],
             [['title', 'description', 'url'], 'trim', 'on' => self::SCENARIO_CREATE],
 
             //update
-            [['resource_id'], 'filter', 'filter' => 'intval', 'on' => self::SCENARIO_UPDATE],
+            [['resource_id', 'category_id'], 'filter', 'filter' => 'intval', 'on' => self::SCENARIO_UPDATE],
             [['title'], 'string', 'length' => ['max' => 1024], 'on' => self::SCENARIO_UPDATE],
             [['description'], 'filter', 'filter' => 'strip_tags', 'on' => self::SCENARIO_UPDATE],
             [['title', 'description', 'url'], 'trim', 'on' => self::SCENARIO_UPDATE],
@@ -63,15 +64,15 @@ class Article extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
+            'id'          => Yii::t('app', 'ID'),
             'resource_id' => Yii::t('app', 'ID Ресурса'),
-            'title' => Yii::t('app', 'Заголовок'),
+            'title'       => Yii::t('app', 'Заголовок'),
             'description' => Yii::t('app', 'Описание'),
-            'url' => Yii::t('app', 'Url'),
-            'type' => Yii::t('app', 'Тип'),
-            'updated_at' => Yii::t('app', 'Время редактирования'),
-            'created_at' => Yii::t('app', 'Время создания'),
-            'status' => Yii::t('app', 'Статус'),
+            'url'         => Yii::t('app', 'Url'),
+            'type'        => Yii::t('app', 'Тип'),
+            'updated_at'  => Yii::t('app', 'Время редактирования'),
+            'created_at'  => Yii::t('app', 'Время создания'),
+            'status'      => Yii::t('app', 'Статус'),
         ];
     }
 

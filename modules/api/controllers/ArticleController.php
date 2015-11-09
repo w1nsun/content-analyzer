@@ -56,8 +56,10 @@ class ArticleController extends Controller
         if ($article->load($request->post())) {
 
             if($article->getIsNewRecord()){
-                $article->type   = Article::TYPE_ARTICLE;
-                $article->status = Article::STATUS_ACTIVE;
+                $article->type        = Article::TYPE_ARTICLE;
+                $article->status      = Article::STATUS_ACTIVE;
+                //todo: заменить на код
+                $article->category_id = 0;
             }
 
             if ($article->save()) {

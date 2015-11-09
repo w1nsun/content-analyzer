@@ -30,5 +30,5 @@ return [
         ],
         'db' => $localParams['db'],
     ],
-    'params' => $params,
+    'params' => array_merge($params, $localParams['params']),
 ];
