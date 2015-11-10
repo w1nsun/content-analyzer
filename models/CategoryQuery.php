@@ -34,22 +34,4 @@ class CategoryQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
-
-    /**
-     * @param array $rssTags
-     * @return int
-     * @throws \yii\db\Exception
-     */
-    public function addTags(array $rssTags)
-    {
-        $values = [];
-        foreach ($rssTags as $tag) {
-            $values[] = '(\'' . addslashes($tag) . '\' , 0)';
-        }
-
-        $sql = 'INSERT IGNORE INTO `' . $this->tagsTableName . '` (tag, category_id)' .
-               'VALUES ' . implode(', ' , $values) . ';';
-
-        return \Yii::$app->db->createCommand($sql)->execute();
-    }
 }

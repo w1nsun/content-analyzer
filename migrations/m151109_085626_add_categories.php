@@ -16,14 +16,6 @@ class m151109_085626_add_categories extends Migration
 
         $this->execute('ALTER TABLE `article`
 	          ADD COLUMN `category_id` INT(10) UNSIGNED NOT NULL AFTER `type`;');
-
-        $this->execute('CREATE TABLE `rss_tag_category` (
-                `tag` VARCHAR(255) NOT NULL,
-                `category_id` VARCHAR(255) NOT NULL,
-                PRIMARY KEY (`tag`, `category_id`)
-            )
-            COLLATE=\'utf8_general_ci\'
-            ENGINE=InnoDB;');
     }
 
     public function down()

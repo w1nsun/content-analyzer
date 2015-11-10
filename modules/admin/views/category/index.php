@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ArticleSearch */
+/* @var $searchModel app\models\CategorySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Статьи');
+$this->title = Yii::t('app', 'Категории');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="article-index">
+<div class="category-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Добавить Статью'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Создать категорию'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -24,16 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             'id',
-            'resource_id',
-            'title:ntext',
-            'description:ntext',
-            'url:ntext',
-            // 'type',
-            // 'lang',
-            // 'country',
-            // 'updated_at',
-            // 'created_at',
-            // 'status',
+            'title',
+            'slug',
+            'status',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -75,6 +75,14 @@ AdminAsset::register($this);
                             'url'         => ['/admin/article/index'],
                         ],
                         [
+                            'label'       => Yii::t('app', 'Категории'),
+                            'url'         => ['/admin/category/index'],
+                        ],
+                        [
+                            'label'       => Yii::t('app', 'Тэги'),
+                            'url'         => ['/admin/tag/index'],
+                        ],
+                        [
                             'label'       => Yii::t('app', 'Пользователи'),
                             'url'         => ['/admin/user/index'],
                         ],

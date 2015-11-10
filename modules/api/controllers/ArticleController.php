@@ -6,8 +6,8 @@ use app\components\FileSystem;
 use app\components\image\ImageDownloader;
 use app\components\image\ImageValidator;
 use app\models\Article;
-use app\models\Category;
 use app\models\Image;
+use app\models\Tag;
 use yii\data\ActiveDataProvider;
 
 class ArticleController extends Controller
@@ -51,6 +51,9 @@ class ArticleController extends Controller
 
     public function actionCreate()
     {
+
+        //todo: разделить загрузку тэгов и картинок в отдельный контроллер
+
         $request = \Yii::$app->getRequest();
         $article = $this->loadByUrlOrNew($request->post('Article')['url']);
 
@@ -64,7 +67,7 @@ class ArticleController extends Controller
             }
 
             if ($article->save()) {
-                $this->extractAndSaveTags($request);
+                $this->extractAndSaveTags($request, $article->id);
                 if (!empty($request->post('image'))) {
                     $this->saveImage($request->post('image'), $article);
                 }
@@ -148,9 +151,10 @@ class ArticleController extends Controller
 
     /**
      * @param \yii\web\Request $request
+     * @param int $articleId
      * @return null
      */
-    protected function extractAndSaveTags(\yii\web\Request $request)
+    protected function extractAndSaveTags(\yii\web\Request $request, $articleId)
     {
         $tags = json_decode($request->post()['tags']);
 
@@ -158,7 +162,24 @@ class ArticleController extends Controller
             return null;
         }
 
-        $tags = array_map('strtolower', $tags);
-        Category::query()->addTags($tags);
+        $tags  = array_map('strtolower', $tags);
+        $tags  = array_map('trim', $tags);
+        $tagQuery = Tag::find();
+
+        $tagQuery->batchAdd($tags);
+
+
+        //todo: разделить функционал
+
+        /** @var \app\models\Tag[] $tags */
+        $tags         = $tagQuery->select('id')->where(['tag' => $tags])->distinct()->all();
+        $articleQuery = Article::find();
+
+        $tagsIds = [];
+        foreach ($tags as $tag) {
+            $tagsIds[] = $tag->id;
+        }
+
+        $articleQuery->batchAddRelativeTags($articleId, $tagsIds);
     }
 }

@@ -11,6 +11,11 @@ use app\components\ActiveQuery;
  */
 class ArticleQuery extends ActiveQuery
 {
+    public static function articleTagTableName()
+    {
+        return 'article_tag';
+    }
+
     /*public function active()
     {
         $this->andWhere('[[status]]=1');
@@ -33,5 +38,25 @@ class ArticleQuery extends ActiveQuery
     public function one($db = null)
     {
         return parent::one($db);
+    }
+
+
+    /**
+     * @param $articleId
+     * @param array $tagsIds
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function batchAddRelativeTags($articleId, array $tagsIds)
+    {
+        $values = [];
+        foreach ($tagsIds as $tagId) {
+            $values[] = '(' . (int) $articleId . ', ' . (int) $tagId . ')';
+        }
+
+        $sql = 'INSERT IGNORE INTO `' . self::articleTagTableName() . '` (article_id, tag_id) ' .
+            'VALUES ' . implode(', ' , $values) . ';';
+
+        return \Yii::$app->db->createCommand($sql)->execute();
     }
 }

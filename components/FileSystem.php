@@ -4,6 +4,9 @@ namespace app\components;
 
 use yii\base\Component;
 
+
+//todo: упростить
+
 class FileSystem extends Component
 {
     const FILE_TYPE_IMAGE = 'image';
