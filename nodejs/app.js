@@ -184,9 +184,6 @@ var App = function () {
     };
 
     this.writeArticle = function (article) {
-
-        console.log(JSON.stringify(article.tags));
-
         var options = {
             url: 'http://' + Config.serviceDomain + '/api/article/create',
             formData: {
