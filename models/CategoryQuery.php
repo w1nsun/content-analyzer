@@ -34,4 +34,16 @@ class CategoryQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    public function getAllAsEnum()
+    {
+        $categories = $this->select(['id', 'title'])->asArray()->all();
+        $enum       = [];
+
+        foreach ($categories as $category) {
+            $enum[$category['id']] = $category['title'];
+        }
+
+        return $enum;
+    }
 }

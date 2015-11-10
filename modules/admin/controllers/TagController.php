@@ -2,11 +2,13 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Category;
 use Yii;
 use app\models\Tag;
 use app\models\TagSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Request;
 
 /**
  * TagController implements the CRUD actions for Tag model.
@@ -103,6 +105,37 @@ class TagController extends BaseController
     }
 
     /**
+     * @param null $tag_id
+     * @return string
+     */
+    public function actionTag_category($tag_id = null)
+    {
+        /** @var Request $request */
+        $request = Yii::$app->request;
+
+        if ($request->getIsPost()) {
+
+            $tagId      = (int) $request->post()['tag_id'];
+            $categoryId = (int) $request->post()['category_id'];
+            $isCategory = Category::find()->where(['id' => (int) $categoryId])->count();
+
+            if ($isCategory) {
+                $tag = Tag::find()->where(['id' => $tagId])->one();
+                $tag->category_id = $categoryId;
+                $tag->save(false);
+            }
+            
+            return $this->redirect(['tag_category']);
+        }
+
+        return $this->render('tag_category', [
+            'tag_id'         => $tag_id,
+            'categories' => Category::find()->getAllAsEnum(),
+            'tags'       => Tag::find()->getAllWithoutCategoryAsEnum(),
+        ]);
+    }
+
+    /**
      * Finds the Tag model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
@@ -117,4 +150,6 @@ class TagController extends BaseController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
 }

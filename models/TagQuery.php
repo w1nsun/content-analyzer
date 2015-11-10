@@ -50,4 +50,24 @@ class TagQuery extends \yii\db\ActiveQuery
 
         return \Yii::$app->db->createCommand($sql)->execute();
     }
+
+    /**
+     * @return array
+     */
+    public function getAllWithoutCategoryAsEnum()
+    {
+        $tags = $this->select(['id', 'tag'])
+                    ->where(['category_id' => 0, 'status' => Tag::STATUS_ACTIVE])
+                    ->orderBy('tag ASC')
+                    ->asArray()
+                    ->all();
+
+        $enum = [];
+
+        foreach ($tags as $tag) {
+            $enum[$tag['id']] = $tag['tag'];
+        }
+
+        return $enum;
+    }
 }
