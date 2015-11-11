@@ -6,7 +6,7 @@ $localParams = require(__DIR__ . '/local_params.php');
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'eventHandlers'],
     'language' => 'ru-RU',
     'sourceLanguage' => 'ru-RU',
     'modules' => [
@@ -18,6 +18,9 @@ $config = [
         ],
     ],
     'components' => [
+        'eventHandlers' => [
+            'class' => 'app\components\EventHandlers'
+        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],

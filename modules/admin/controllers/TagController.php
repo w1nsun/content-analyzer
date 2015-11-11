@@ -124,7 +124,7 @@ class TagController extends BaseController
                 $tag->category_id = $categoryId;
                 $tag->save(false);
             }
-            
+
             return $this->redirect(['tag_category']);
         }
 
