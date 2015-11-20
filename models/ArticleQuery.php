@@ -59,4 +59,14 @@ class ArticleQuery extends ActiveQuery
 
         return \Yii::$app->db->createCommand($sql)->execute();
     }
+
+    /**
+     * @return $this
+     */
+    public function active()
+    {
+        $this->andFilterWhere(['=', 'status', Article::STATUS_ACTIVE]);
+
+        return $this;
+    }
 }
