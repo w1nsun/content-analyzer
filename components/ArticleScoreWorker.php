@@ -30,13 +30,20 @@ class ArticleScoreWorker
     protected $offset = 0;
 
     /**
+     * @var LikesLog
+     */
+    protected $likesLog;
+
+    /**
      * @param Client $httpClient
      * @param ServiceLocator $serviceLocator
+     * @param LikesLog $likesLog
      */
-    public function __construct(Client $httpClient, ServiceLocator $serviceLocator)
+    public function __construct(Client $httpClient, ServiceLocator $serviceLocator, LikesLog $likesLog)
     {
         $this->httpClient     = $httpClient;
         $this->serviceLocator = $serviceLocator;
+        $this->likesLog       = $likesLog;
     }
 
     /**
@@ -78,7 +85,7 @@ class ArticleScoreWorker
     {
         $this->initSocialContainer();
 
-        $likes = [];
+        $numberLikes = [];
 
         while (true) {
             $articles = Article::find()->active()->offset($this->offset)->limit($this->limit)->all();
@@ -93,7 +100,7 @@ class ArticleScoreWorker
                     /** @var \app\components\socials\PageLikesInterface $social */
                     $social = $this->serviceLocator->get($this->makeServiceName($socialName));
 
-                    $likes[$article->url] = $social->getLikes($article->url);
+                    $numberLikes[$article->id][$socialName] = $social->getLikes($article->url);
                 }
             }
 
@@ -103,6 +110,17 @@ class ArticleScoreWorker
             $this->offset += $this->limit;
         }
 
-        var_dump($likes);
+        $this->log($numberLikes);
+    }
+
+    /**
+     * @param $numberLikes
+     */
+    protected function log($numberLikes)
+    {
+        foreach ($numberLikes as $articleId => $numberLikesBySocial) {
+            $data = array_merge(['article_id' => $articleId], $numberLikesBySocial);
+            $this->likesLog->log($data);
+        }
     }
 }

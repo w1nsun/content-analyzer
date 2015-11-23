@@ -15,8 +15,7 @@ class m151110_081637_add_tags extends Migration
             PRIMARY KEY (`id`, `tag`)
         )
         COLLATE=\'utf8_general_ci\'
-        ENGINE=InnoDB
-        AUTO_INCREMENT=80;');
+        ENGINE=InnoDB;');
 
         $this->execute('CREATE TABLE `article_tag` (
             `article_id` INT UNSIGNED NOT NULL,
