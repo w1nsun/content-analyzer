@@ -2,38 +2,14 @@
 
 namespace app\components\socials;
 
-use GuzzleHttp\Client;
-
-class Facebook implements SocialInterface, PageLikesInterface
+class Facebook extends Social implements PageLikesInterface
 {
     const NAME = 'facebook';
 
     /**
-     * @var Client
-     */
-    protected $httpClient;
-
-    /**
-     * @param Client $httpClient
-     */
-    public function __construct(Client $httpClient)
-    {
-        $this->httpClient = $httpClient;
-    }
-
-    /**
-     * Get class name with namespace
      * @return string
      */
-    public static function getClassName()
-    {
-        return get_called_class();
-    }
-
-    /**
-     * @return string
-     */
-    public static function getName()
+    public function getName()
     {
         return self::NAME;
     }

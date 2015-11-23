@@ -3,6 +3,7 @@
 namespace app\components;
 
 use app\components\socials\Facebook;
+use app\components\socials\Vkontakte;
 use app\models\Article;
 use GuzzleHttp\Client;
 use yii\di\ServiceLocator;
@@ -52,7 +53,7 @@ class ArticleScoreWorker
     protected static function parseSocialList()
     {
         return [
-            Facebook::getName() => Facebook::getClassName()
+            Facebook::NAME => Facebook::getClassName()
         ];
     }
 
@@ -83,6 +84,14 @@ class ArticleScoreWorker
      */
     public function run()
     {
+        $vk = new Vkontakte($this->httpClient);
+        $vk->getLikes('http://habrahabr.ru/');
+
+        exit;
+
+
+
+
         $this->initSocialContainer();
 
         $numberLikes = [];

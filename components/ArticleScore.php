@@ -5,6 +5,7 @@ namespace app\components;
 use yii\base\Component;
 
 //https://gist.github.com/jonathanmoore/2640302
+//http://sigov.ru/2012/12/15/shares/
 class ArticleScore extends Component
 {
     const SOCIAL_FACEBOOK    = 'facebook';
