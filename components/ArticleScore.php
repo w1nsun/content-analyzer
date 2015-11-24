@@ -6,6 +6,7 @@ use yii\base\Component;
 
 //https://gist.github.com/jonathanmoore/2640302
 //http://sigov.ru/2012/12/15/shares/
+//http://blog.up.dn.ua/articles/poluchit-chislo-laikov-v-sotsialnih-setyah.html
 class ArticleScore extends Component
 {
     const SOCIAL_FACEBOOK    = 'facebook';
