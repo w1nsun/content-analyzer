@@ -53,7 +53,8 @@ class ArticleScoreWorker
     protected static function parseSocialList()
     {
         return [
-            Facebook::NAME => Facebook::getClassName()
+            Facebook::NAME  => Facebook::getClassName(),
+            Vkontakte::NAME => Vkontakte::getClassName(),
         ];
     }
 
@@ -84,20 +85,13 @@ class ArticleScoreWorker
      */
     public function run()
     {
-        $vk = new Vkontakte($this->httpClient);
-        $vk->getLikes('http://habrahabr.ru/');
-
-        exit;
-
-
-
-
         $this->initSocialContainer();
 
-        $numberLikes = [];
-
         while (true) {
+            $numLikes = [];
             $articles = Article::find()->active()->offset($this->offset)->limit($this->limit)->all();
+
+            printf("selected articles: %d\r\n", count($articles));
 
             if (!count($articles)) {
                 break;
@@ -108,8 +102,15 @@ class ArticleScoreWorker
                 foreach (self::parseSocialList() as $socialName => $socialClass) {
                     /** @var \app\components\socials\PageLikesInterface $social */
                     $social = $this->serviceLocator->get($this->makeServiceName($socialName));
+                    $num    = $social->getLikes($article->url);
 
-                    $numberLikes[$article->id][$socialName] = $social->getLikes($article->url);
+                    printf("parse: %s | number of likes: %d | social: %s\r\n", $article->url, $num, $socialName);
+
+                    if (!is_int($num)) {
+                        continue;
+                    }
+
+                    $numLikes[$article->id][$socialName] = $num;
                 }
             }
 
@@ -117,18 +118,20 @@ class ArticleScoreWorker
             unset($articles);
 
             $this->offset += $this->limit;
-        }
+            $this->log($numLikes);
 
-        $this->log($numberLikes);
+            $numLikes = null;
+            unset($numLikes);
+        }
     }
 
     /**
-     * @param $numberLikes
+     * @param $numLikes
      */
-    protected function log($numberLikes)
+    protected function log($numLikes)
     {
-        foreach ($numberLikes as $articleId => $numberLikesBySocial) {
-            $data = array_merge(['article_id' => $articleId], $numberLikesBySocial);
+        foreach ($numLikes as $articleId => $numLikesBySocial) {
+            $data = array_merge(['article_id' => $articleId], $numLikesBySocial);
             $this->likesLog->log($data);
         }
     }

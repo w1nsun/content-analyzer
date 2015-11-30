@@ -24,23 +24,30 @@ class Vkontakte extends Social implements PageLikesInterface
      */
     public function getLikes($url)
     {
-        $response = $this->httpClient->request('GET', $this->makePageLikesUrl($url), [
-//            'headers' => [
-//                'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36',
-//            ],
-//            'allow_redirects' => true,
-//            'debug' => true,
-//            'verify' => false
-        ]);
+        $url  = rtrim($url, '/');
+        $urls = [$url, $url . '/'];
 
-        if ($response->getStatusCode() !== 200) {
-            return null;
+        $likesNum = 0;
+        foreach ($urls as $url) {
+            $response = file_get_contents($this->makePageLikesUrl($url));
+            if (!$response) {
+                \Yii::error('Vkontakte. Error response!');
+                return null;
+            }
+
+            preg_match('/^VK.Share.count\(1, (\d+)\);$/i',$response, $temp);
+
+            if (!isset($temp[1])) {
+                \Yii::error('Vkontakte. Error parse count likes!');
+                return null;
+            }
+
+            $likesNum += (int) $temp[1];
+
+            usleep(350000);
         }
 
-        var_dump(json_decode($response->getBody()));
-        var_dump(file_get_contents($this->makePageLikesUrl($url)));
-
-//        return json_decode($response->getBody())->data[0]->total_count;
+        return $likesNum;
     }
 
     /**
