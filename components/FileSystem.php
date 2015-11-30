@@ -6,6 +6,8 @@ use yii\base\Component;
 
 
 //todo: упростить
+//ImageDownloader - сохранять изображение изначально в temp
+//FileSystem - createDirById($id), save($from, $to), createDir()
 
 class FileSystem extends Component
 {
