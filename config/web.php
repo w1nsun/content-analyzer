@@ -43,9 +43,7 @@ $config = [
         ],
         'fs' => [
             'class'          => 'app\components\FileSystem',
-            'imagesDirAlias' => '@webroot/files',
-            'maxDirs'        => 1000,
-            'levelSubDirs'   => 3
+            'baseDirAlias'   => '@webroot/files',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

@@ -95,7 +95,7 @@ class ImageDownloader extends Component
      */
     protected function request()
     {
-        $fp = fopen ($this->generateRuntimeFileName(), 'w+');
+        $fp = tmpfile();
         $ch = curl_init($this->url);
 
         curl_setopt($ch, CURLOPT_FILE, $fp);

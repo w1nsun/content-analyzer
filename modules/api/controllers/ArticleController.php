@@ -138,7 +138,7 @@ class ArticleController extends Controller
     {
         /** @var \app\components\FileSystem $fileSystem */
         $fileSystem = \Yii::$app->fs;
-        $subDir     = $fileSystem->image()->createSubDirs(uniqid());
+        $subDir     = $fileSystem->image()->createDirById(uniqid());
         $imagesDir  = $fileSystem->image()->getDir();
         $imageExt   = pathinfo($imageUrl, PATHINFO_EXTENSION);
         $imageName  = uniqid('article_') . '.' . $imageExt;
