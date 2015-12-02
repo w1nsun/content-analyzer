@@ -80,12 +80,12 @@ class ImageDownloader extends Component
         $result  = false;
 
         if ($isValid) {
-            $result = $this->fileSystem->image()->file($this->runtimeFile)->saveAs($this->to);
+            $result = $this->fileSystem->copy($this->runtimeFile, $this->to);
         } else {
             \Yii::error($error);
         }
 
-        $this->delete($this->runtimeFile);
+        $this->fileSystem->delete($this->runtimeFile);
 
         return $result;
     }
@@ -95,7 +95,7 @@ class ImageDownloader extends Component
      */
     protected function request()
     {
-        $fp = tmpfile();
+        $fp = fopen ($this->generateRuntimeFileName(), 'w+');
         $ch = curl_init($this->url);
 
         curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -130,18 +130,5 @@ class ImageDownloader extends Component
         $this->runtimeFile = $dir . '/' . uniqid('runtime_') . '.' . $ext;
 
         return $this->runtimeFile;
-    }
-
-    /**
-     * @param $src
-     * @return bool
-     */
-    protected function delete($src)
-    {
-        if (file_exists($src)) {
-            return unlink($src);
-        }
-
-        return false;
     }
 }

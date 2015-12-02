@@ -79,4 +79,15 @@ class Image extends ActiveRecord
     {
         return new ImageQuery(get_called_class());
     }
+
+    /**
+     * @param $imageUrl
+     * @return mixed
+     */
+    public static function extractExtFromUrl($imageUrl)
+    {
+        list($clearUrl) = explode('?',$imageUrl);
+
+        return pathinfo($clearUrl, PATHINFO_EXTENSION);
+    }
 }

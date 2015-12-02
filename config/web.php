@@ -42,8 +42,8 @@ $config = [
             'class' => 'app\components\ContentLanguage',
         ],
         'fs' => [
-            'class'          => 'app\components\FileSystem',
-            'baseDirAlias'   => '@webroot/files',
+            'class' => 'app\components\FileSystem',
+            'fsDir' => '@webroot/files',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
