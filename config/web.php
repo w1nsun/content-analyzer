@@ -42,10 +42,8 @@ $config = [
             'class' => 'app\components\ContentLanguage',
         ],
         'fs' => [
-            'class'          => 'app\components\FileSystem',
-            'imagesDirAlias' => '@webroot/files',
-            'maxDirs'        => 1000,
-            'levelSubDirs'   => 3
+            'class' => 'app\components\FileSystem',
+            'fsDir' => '@webroot/files',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

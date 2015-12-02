@@ -69,7 +69,7 @@ class ArticleController extends Controller
             if ($article->save()) {
                 $this->extractAndSaveTags($request, $article->id);
                 if (!empty($request->post('image'))) {
-                    $this->saveImage($request->post('image'), $article);
+                    $this->attachImage($request->post('image'), $article);
                 }
 
                 return ['id' => $article->id];
@@ -104,49 +104,29 @@ class ArticleController extends Controller
      * @param $imageUrl
      * @param Article $article
      */
-    protected function saveImage($imageUrl, Article $article)
+    protected function attachImage($imageUrl, Article $article)
     {
         /** @var FileSystem $fileSystem */
         $fileSystem = \Yii::$app->fs;
         $validator  = new ImageValidator();
         $downloader = new ImageDownloader($validator, $fileSystem);
-        $imagePaths = $this->generateSaveImagePath($imageUrl);
-        $result     = $downloader
-                        ->from($imageUrl)
-                        ->to($imagePaths['full_path'])
-                        ->download();
+        $imagePath  = $fileSystem->generateDir() . '/' . uniqid('article') . '.' . Image::extractExtFromUrl($imageUrl);
+        $imageFile  = $fileSystem->getFsDir() . '/' . $imagePath;
+        $result     = $downloader->from($imageUrl)->to($imageFile)->download();
+        list($imageWidth, $imageHeight) = getimagesize($imageFile);
 
         if ($result) {
             $image             = new Image(['scenario' => Image::SCENARIO_CREATE]);
             $image->owner_type = Image::OWNER_TYPE_ARTICLE;
             $image->owner_id   = $article->id;
             $image->size       = Image::SIZE_ORIGINAL;
-            $image->src        = $imagePaths['relative_path'];
-            $image->width      = $fileSystem->image()->file($imagePaths['full_path'])->getWidth();
-            $image->height     = $fileSystem->image()->file($imagePaths['full_path'])->getHeight();
+            $image->src        = $imagePath;
+            $image->width      = $imageWidth;
+            $image->height     = $imageHeight;
             $image->status     = Image::STATUS_ACTIVE;
 
             $image->save();
         }
-    }
-
-    /**
-     * @param string $imageUrl
-     * @return string
-     */
-    protected function generateSaveImagePath($imageUrl)
-    {
-        /** @var \app\components\FileSystem $fileSystem */
-        $fileSystem = \Yii::$app->fs;
-        $subDir     = $fileSystem->image()->createSubDirs(uniqid());
-        $imagesDir  = $fileSystem->image()->getDir();
-        $imageExt   = pathinfo($imageUrl, PATHINFO_EXTENSION);
-        $imageName  = uniqid('article_') . '.' . $imageExt;
-
-        return [
-            'full_path'     => $imagesDir . '/' . $subDir . '/' . $imageName,
-            'relative_path' => $subDir . '/' . $imageName,
-        ];
     }
 
     /**
