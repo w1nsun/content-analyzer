@@ -3,6 +3,7 @@
 namespace app\components;
 
 use app\components\socials\Facebook;
+use app\components\socials\Twitter;
 use app\components\socials\Vkontakte;
 use app\models\Article;
 use GuzzleHttp\Client;
@@ -55,6 +56,7 @@ class ArticleLikesWorker
         return [
             Facebook::NAME  => Facebook::getClassName(),
             Vkontakte::NAME => Vkontakte::getClassName(),
+            Twitter::NAME   => Twitter::getClassName(),
         ];
     }
 
@@ -85,6 +87,8 @@ class ArticleLikesWorker
      */
     public function run()
     {
+        (new Twitter($this->httpClient))->getLikes('http://habrahabr.ru/');exit;
+
         $this->initSocialContainer();
 
         while (true) {

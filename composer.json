@@ -22,7 +22,8 @@
         "codeception/specify": "*",
         "codeception/verify": "*",
         "yiisoft/yii2-apidoc": "~2.0.0",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "yiisoft/yii2-authclient": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
