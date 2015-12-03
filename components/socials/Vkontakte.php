@@ -2,10 +2,8 @@
 
 namespace app\components\socials;
 
+use yii\base\ErrorException;
 
-/*
- * todo: при запросе url учитывать кол-во с слэшом вконце и без, потому как для VK это разные URL
- */
 class Vkontakte extends Social implements PageLikesInterface
 {
     const NAME = 'vkontakte';
@@ -24,23 +22,25 @@ class Vkontakte extends Social implements PageLikesInterface
      */
     public function getLikes($url)
     {
+
+        //todo:for Vkontakte URI with slash ant without are different
         $url  = rtrim($url, '/');
         $urls = [$url, $url . '/'];
 
         $likesNum = 0;
         foreach ($urls as $url) {
+            usleep(1500000);
+            $response = false;
 
-
-            /*
-             * PHP Warning 'yii\base\ErrorException' with message
-             * 'file_get_contents(https://vk.com/share.php?act=count&index=1&url=http://time.com/4132308/freddie-gray-trial-officer-jury&format=json): failed to open stream: Connection timed out'
-             * */
-
-            $response = file_get_contents($this->makePageLikesUrl($url));
-            if (!$response) {
-                \Yii::error('Vkontakte. Error response!');
-                return null;
-            }
+            do {
+                try {
+                    $response = file_get_contents($this->makePageLikesUrl($url));
+                } catch (ErrorException $e) {
+                    \Yii::error('Vkontakte parser error: ' . $e->getMessage());
+                    \Yii::trace(__METHOD__ . 'sleep...');
+                    sleep(7);
+                }
+            } while (!$response);
 
             preg_match('/^VK.Share.count\(1, (\d+)\);$/i',$response, $temp);
 
@@ -50,8 +50,6 @@ class Vkontakte extends Social implements PageLikesInterface
             }
 
             $likesNum += (int) $temp[1];
-
-            usleep(350000);
         }
 
         return $likesNum;
