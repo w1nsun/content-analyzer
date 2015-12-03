@@ -29,6 +29,13 @@ class Vkontakte extends Social implements PageLikesInterface
 
         $likesNum = 0;
         foreach ($urls as $url) {
+
+
+            /*
+             * PHP Warning 'yii\base\ErrorException' with message
+             * 'file_get_contents(https://vk.com/share.php?act=count&index=1&url=http://time.com/4132308/freddie-gray-trial-officer-jury&format=json): failed to open stream: Connection timed out'
+             * */
+
             $response = file_get_contents($this->makePageLikesUrl($url));
             if (!$response) {
                 \Yii::error('Vkontakte. Error response!');
