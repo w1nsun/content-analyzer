@@ -8,7 +8,7 @@ use app\models\Article;
 use GuzzleHttp\Client;
 use yii\di\ServiceLocator;
 
-class ArticleScoreWorker
+class ArticleLikesWorker
 {
     /**
      * @var Client

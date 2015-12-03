@@ -56,6 +56,6 @@ class Vkontakte extends Social implements PageLikesInterface
      */
     protected function makePageLikesUrl($url)
     {
-        return "https://vk.com/share.php?act=count&index=1&url={$url}&format=json&callback=?";
+        return "https://vk.com/share.php?act=count&index=1&url={$url}&format=json";
     }
 }

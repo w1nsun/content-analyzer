@@ -2,7 +2,7 @@
 
 namespace app\commands;
 
-use app\components\ArticleScoreWorker;
+use app\components\ArticleLikesWorker;
 use app\components\LikesLog;
 use GuzzleHttp\Client;
 use yii\console\Controller;
@@ -16,7 +16,7 @@ class ArticleController extends Controller
         $client         = new Client();
         $serviceLocator = new ServiceLocator();
         $likesLog       = new LikesLog(\Yii::$app->db, new Query());
-        $worker         = new ArticleScoreWorker($client, $serviceLocator, $likesLog);
+        $worker         = new ArticleLikesWorker($client, $serviceLocator, $likesLog);
 
         $worker->run();
 

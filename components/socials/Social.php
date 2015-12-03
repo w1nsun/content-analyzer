@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 
 /*
  * todo: реализовать функционал парсинга лайков по симлинкам (искать short ссылки)
+ * http://cgit.drupalcode.org/shareaholic/tree/lib/social-share-counts/share_count.php?id=0af9ade973a91ee7744f61c9820e5779b9241bfc
  */
 abstract class Social
 {
