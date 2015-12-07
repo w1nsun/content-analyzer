@@ -11,6 +11,7 @@ use app\models\Article;
 use GuzzleHttp\Client;
 use yii\di\ServiceLocator;
 
+//todo: twitter treands http://chimera.labs.oreilly.com/books/1234000001583/ch01.html#tinkering-with-twitters-api
 class ArticleLikesWorker
 {
     /**
