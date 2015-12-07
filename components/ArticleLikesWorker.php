@@ -56,10 +56,11 @@ class ArticleLikesWorker
     protected static function parseSocialList()
     {
         return [
-            Facebook::NAME  => Facebook::getClassName(),
-            Vkontakte::NAME => Vkontakte::getClassName(),
-            Pinterest::NAME => Pinterest::getClassName(),
-            Linkedin::NAME  => Linkedin::getClassName(),
+            Facebook::NAME   => Facebook::getClassName(),
+            Vkontakte::NAME  => Vkontakte::getClassName(),
+            Pinterest::NAME  => Pinterest::getClassName(),
+            Linkedin::NAME   => Linkedin::getClassName(),
+            GooglePlus::NAME => GooglePlus::getClassName(),
         ];
     }
 
