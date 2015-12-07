@@ -3,6 +3,8 @@
 namespace app\components;
 
 use app\components\socials\Facebook;
+use app\components\socials\GooglePlus;
+use app\components\socials\Linkedin;
 use app\components\socials\Pinterest;
 use app\components\socials\Vkontakte;
 use app\models\Article;
@@ -57,6 +59,7 @@ class ArticleLikesWorker
             Facebook::NAME  => Facebook::getClassName(),
             Vkontakte::NAME => Vkontakte::getClassName(),
             Pinterest::NAME => Pinterest::getClassName(),
+            Linkedin::NAME  => Linkedin::getClassName(),
         ];
     }
 
@@ -87,6 +90,8 @@ class ArticleLikesWorker
      */
     public function run()
     {
+//        (new GooglePlus($this->httpClient))->getLikes('http://habrahabr.ru/');
+
         $this->initSocialContainer();
 
         while (true) {
