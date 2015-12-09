@@ -65,7 +65,7 @@ class SiteController extends Controller
             'consumerSecret' => Yii::$app->params['twitter_api']['consumer_secret'],
         ]);
         $twitterTrends = new \app\components\trends\Twitter($httpClient, $socialClient);
-        $result = $twitterTrends->find('test');
+        $result = $twitterTrends->find('http://habrahabr.ru/post/272207/');
 
         vd($result);
 

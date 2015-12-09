@@ -18,10 +18,10 @@ class Twitter
     public function find($query)
     {
         return $this->socialClient->api('search/tweets.json', 'GET', [
-            'q' => '#коррупция',
-            'include_entities' => 1,
+            'q' => $query,
+//            'include_entities' => 1,
             'result_type' => 'mixed',
-            'count' => 4
+            'count' => 20
         ]);
     }
 }
