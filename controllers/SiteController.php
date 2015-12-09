@@ -6,6 +6,7 @@ use app\models\forms\SignupForm;
 use app\models\User;
 use GuzzleHttp\Client;
 use Yii;
+use yii\authclient\OAuthToken;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -52,8 +53,23 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        $httpClient = new Client();
+        // Создаем OAuthToken
+        $token = new OAuthToken([
+            'token' => Yii::$app->params['twitter_api']['access_token'],
+            'tokenSecret' => Yii::$app->params['twitter_api']['token_secret']
+        ]);
+        $socialClient = new \yii\authclient\clients\Twitter([
+            'accessToken'    => $token,
+            'consumerKey'    => Yii::$app->params['twitter_api']['consumer_key'],
+            'consumerSecret' => Yii::$app->params['twitter_api']['consumer_secret'],
+        ]);
+        $twitterTrends = new \app\components\trends\Twitter($httpClient, $socialClient);
+        $result = $twitterTrends->find('test');
 
-//        $client = new Client();
+        vd($result);
+
+
 //        $response = $client->request('GET', 'https://api.twitter.com/1.1/trends/place.json?id=918981', [
 //            'headers' => [
 //                'Authorization' => 'OAuth oauth_consumer_key="5Pz2Po9yRyMKv5sp1I3nrYi1h",
