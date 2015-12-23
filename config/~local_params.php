@@ -12,6 +12,12 @@
      'params' => [
          'nodejs_app' => [
              'access_token' => 'example_access_token',
+         ],
+         'twitter_api' => [
+             'access_token'    => '',
+             'token_secret'    => '',
+             'consumer_key'    => '',
+             'consumer_secret' => '',
          ]
      ],
  ];
