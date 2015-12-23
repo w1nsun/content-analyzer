@@ -19,9 +19,9 @@ class Twitter
     {
         return $this->socialClient->api('search/tweets.json', 'GET', [
             'q' => $query,
-//            'include_entities' => 1,
+            'include_entities' => 1,
             'result_type' => 'mixed',
-            'count' => 20
+            'count' => 5
         ]);
     }
 }

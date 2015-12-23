@@ -47,5 +47,6 @@ codecept run (unit|)
 
 9.
 запусить инициализацию ролей
+yii migrate --migrationPath=@yii/rbac/migrations/
 yii rbac/init
 yii user/add-api-user
