@@ -6,6 +6,7 @@ use app\components\socials\Facebook;
 use app\components\socials\GooglePlus;
 use app\components\socials\Linkedin;
 use app\components\socials\Pinterest;
+use app\components\socials\Twitter;
 use app\components\socials\Vkontakte;
 use app\models\Article;
 use GuzzleHttp\Client;
@@ -62,6 +63,7 @@ class ArticleLikesWorker
             Pinterest::NAME  => Pinterest::getClassName(),
             Linkedin::NAME   => Linkedin::getClassName(),
             GooglePlus::NAME => GooglePlus::getClassName(),
+            Twitter::NAME    => Twitter::getClassName(),
         ];
     }
 

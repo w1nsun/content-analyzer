@@ -21,7 +21,7 @@ class Twitter
             'q' => $query,
             'include_entities' => 1,
             'result_type' => 'mixed',
-            'count' => 5
+            'count' => 20
         ]);
     }
 }
