@@ -37,13 +37,14 @@ class GooglePlus extends Social implements PageLikesInterface
                 'key'        => 'p',
                 'apiVersion' => 'v1'
             ]),
-            'debug' => true
+//            'debug' => true
         ]);
 
         if ($response->getStatusCode() !== 200) {
             return null;
         }
 
+        $result = json_decode($response->getBody()->getContents(), true);
         if (!isset($result['result']['metadata']['globalCounts']['count'])) {
             return null;
         }

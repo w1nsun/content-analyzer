@@ -94,13 +94,15 @@ class ArticleLikesWorker
      */
     public function run()
     {
-//        (new GooglePlus($this->httpClient))->getLikes('http://habrahabr.ru/');
-
         $this->initSocialContainer();
 
         while (true) {
             $numLikes = [];
-            $articles = Article::find()->active()->offset($this->offset)->limit($this->limit)->all();
+            $articles = Article::find()
+                            ->recentActive()
+                            ->offset($this->offset)
+                            ->limit($this->limit)
+                            ->all();
 
             printf("selected articles: %d\r\n", count($articles));
 

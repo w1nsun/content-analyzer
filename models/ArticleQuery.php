@@ -63,9 +63,10 @@ class ArticleQuery extends ActiveQuery
     /**
      * @return $this
      */
-    public function active()
+    public function recentActive()
     {
         $this->andFilterWhere(['=', 'status', Article::STATUS_ACTIVE]);
+        $this->andFilterWhere(['>=', 'created_at', (time()-(3600*24*5))]);
 
         return $this;
     }

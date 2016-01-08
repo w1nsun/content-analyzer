@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\socials\GooglePlus;
 use app\models\forms\SignupForm;
 use app\models\User;
 use GuzzleHttp\Client;
@@ -53,22 +54,28 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        $httpClient = new Client();
-        // Создаем OAuthToken
-        $token = new OAuthToken([
-            'token' => Yii::$app->params['twitter_api']['access_token'],
-            'tokenSecret' => Yii::$app->params['twitter_api']['token_secret']
-        ]);
-        $socialClient = new \yii\authclient\clients\Twitter([
-            'accessToken'    => $token,
-            'consumerKey'    => Yii::$app->params['twitter_api']['consumer_key'],
-            'consumerSecret' => Yii::$app->params['twitter_api']['consumer_secret'],
-        ]);
-        $twitterTrends = new \app\components\trends\Twitter($httpClient, $socialClient);
-//        $result = $twitterTrends->find('http://habrahabr.ru/post');
-        $result = $twitterTrends->find('http://habrahabr.ru/post/270267/');
 
-        vd($result);
+        vd((new GooglePlus(new Client()))
+            ->getLikes('http://time.com/4172944/making-murderer-protest-song-arcs/'));
+
+
+
+//        $httpClient = new Client();
+//        // Создаем OAuthToken
+//        $token = new OAuthToken([
+//            'token' => Yii::$app->params['twitter_api']['access_token'],
+//            'tokenSecret' => Yii::$app->params['twitter_api']['token_secret']
+//        ]);
+//        $socialClient = new \yii\authclient\clients\Twitter([
+//            'accessToken'    => $token,
+//            'consumerKey'    => Yii::$app->params['twitter_api']['consumer_key'],
+//            'consumerSecret' => Yii::$app->params['twitter_api']['consumer_secret'],
+//        ]);
+//        $twitterTrends = new \app\components\trends\Twitter($httpClient, $socialClient);
+////        $result = $twitterTrends->find('http://habrahabr.ru/post');
+//        $result = $twitterTrends->find('http://habrahabr.ru/post/270267/');
+//
+//        vd($result);
 
 
 //        $response = $client->request('GET', 'https://api.twitter.com/1.1/trends/place.json?id=918981', [
