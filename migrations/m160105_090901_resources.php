@@ -18,14 +18,14 @@ class m160105_090901_resources extends Migration
             'status'
         ];
         $rows = [
-            ['TimeCom', 'http://time.com/feed/', 'rss', 'EN', 'GB', time(), time(), \app\models\Category::STATUS_ACTIVE]
+            ['TimeCom', 'http://time.com/feed/', 'rss', 'EN', 'GB', time(), time(), \app\models\Resource::STATUS_ACTIVE]
         ];
 
 
         $this
             ->getDb()
             ->createCommand()
-            ->batchInsert(\app\models\Category::tableName(), $columns, $rows)
+            ->batchInsert(\app\models\Resource::tableName(), $columns, $rows)
             ->execute();
     }
 
