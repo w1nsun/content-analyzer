@@ -24,7 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             'id',
-            'title',
+            'title_en',
+            'title_ru',
             'slug',
             'status',
 

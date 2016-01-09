@@ -39,6 +39,7 @@ class TagController extends BaseController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'categories' => $this->findCategories(),
         ]);
     }
 
@@ -135,6 +136,7 @@ class TagController extends BaseController
         ]);
     }
 
+
     /**
      * Finds the Tag model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -151,5 +153,18 @@ class TagController extends BaseController
         }
     }
 
+    /**
+     * @return array
+     */
+    private function findCategories()
+    {
+        $categories = Category::find()->active()->all();
+        $enum = ['0' => ''];
 
+        foreach ($categories as $category) {
+            $enum[$category->id] = $category->getTitle();
+        }
+
+        return $enum;
+    }
 }

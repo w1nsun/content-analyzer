@@ -41,4 +41,5 @@ return [
     'Высота' => 'Height',
     'Размер' => 'Size',
     'Parent ID' => 'Parent ID',
+    'Категория' => 'Category',
 ];

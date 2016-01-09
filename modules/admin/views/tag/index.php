@@ -23,10 +23,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'tag',
+            'category_id' => [
+                'label' => \Yii::t('app', 'Категория'),
+                'format' => 'raw',
+                'value' => function ($data) use ($categories) {
+                    /** @var app\models\Tag $data */
+                    return Html::dropDownList(
+                        "[item_category][{$data->id}]",
+                        $data->category_id,
+                        $categories,
+                        ['class' => 'js_select_category']
+                    );
+                }
+            ],
             'category_id',
             'status',
 
