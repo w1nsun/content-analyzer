@@ -2,12 +2,9 @@
 
 namespace app\controllers;
 
-use app\components\socials\GooglePlus;
 use app\models\forms\SignupForm;
 use app\models\User;
-use GuzzleHttp\Client;
 use Yii;
-use yii\authclient\OAuthToken;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -54,51 +51,6 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-
-        vd((new GooglePlus(new Client()))
-            ->getLikes('http://time.com/4172944/making-murderer-protest-song-arcs/'));
-
-
-
-//        $httpClient = new Client();
-//        // Создаем OAuthToken
-//        $token = new OAuthToken([
-//            'token' => Yii::$app->params['twitter_api']['access_token'],
-//            'tokenSecret' => Yii::$app->params['twitter_api']['token_secret']
-//        ]);
-//        $socialClient = new \yii\authclient\clients\Twitter([
-//            'accessToken'    => $token,
-//            'consumerKey'    => Yii::$app->params['twitter_api']['consumer_key'],
-//            'consumerSecret' => Yii::$app->params['twitter_api']['consumer_secret'],
-//        ]);
-//        $twitterTrends = new \app\components\trends\Twitter($httpClient, $socialClient);
-////        $result = $twitterTrends->find('http://habrahabr.ru/post');
-//        $result = $twitterTrends->find('http://habrahabr.ru/post/270267/');
-//
-//        vd($result);
-
-
-//        $response = $client->request('GET', 'https://api.twitter.com/1.1/trends/place.json?id=918981', [
-//            'headers' => [
-//                'Authorization' => 'OAuth oauth_consumer_key="5Pz2Po9yRyMKv5sp1I3nrYi1h",
-//                oauth_nonce="2edc180e0776d1600ba2ea33907c3c13",
-//                oauth_signature="8v2Gx7%2FSunkAGFIFoigbKIVdjeE%3D",
-//                oauth_signature_method="HMAC-SHA1",
-//                oauth_timestamp="1449666578",
-//                oauth_token="1682905063-qJLytt0EJBTgFRicPD9Fw0yOngh6nEeMeODCzOz",
-//                oauth_version="1.0"'
-//            ]
-//        ]);
-
-//        $client = new Client();
-//        $response = $client->request('GET', 'https://api.twitter.com/1.1/search/tweets.json?q=%23коррупция&include_entities=1&result_type=mixed&count=4', [
-//            'headers' => [
-//                'Authorization' => 'OAuth oauth_consumer_key="5Pz2Po9yRyMKv5sp1I3nrYi1h", oauth_nonce="7ed2d0a0fdaf671ef2556d82668f0e50", oauth_signature="bMjOG4KE2ArSwiw7d7d4aJ7tC88%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1449667379", oauth_token="1682905063-qJLytt0EJBTgFRicPD9Fw0yOngh6nEeMeODCzOz", oauth_version="1.0"'
-//            ]
-//        ]);
-//
-//        vd(json_decode($response->getBody()->getContents(), true));
-
         return $this->render('index');
     }
 

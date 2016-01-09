@@ -7,7 +7,26 @@ class m160105_090901_resources extends Migration
 {
     public function up()
     {
+        $columns = [
+            'title',
+            'url',
+            'type',
+            'lang',
+            'country',
+            'updated_at',
+            'created_at',
+            'status'
+        ];
+        $rows = [
+            ['TimeCom', 'http://time.com/feed/', 'rss', 'EN', 'GB', time(), time(), \app\models\Category::STATUS_ACTIVE]
+        ];
 
+
+        $this
+            ->getDb()
+            ->createCommand()
+            ->batchInsert(\app\models\Category::tableName(), $columns, $rows)
+            ->execute();
     }
 
     public function down()
