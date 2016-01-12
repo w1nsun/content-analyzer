@@ -6,6 +6,7 @@ use app\models\Category;
 use Yii;
 use app\models\Tag;
 use app\models\TagSearch;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Request;
@@ -40,6 +41,8 @@ class TagController extends BaseController
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'categories' => $this->findCategories(),
+            'changeCategoryUrl' => Url::toRoute('/admin/tag/change-category'),
+            'enumTagStatus' => Tag::enumStatus()
         ]);
     }
 
@@ -105,35 +108,29 @@ class TagController extends BaseController
         return $this->redirect(['index']);
     }
 
-    /**
-     * @param null $tag_id
-     * @return string
-     */
-    public function actionTag_category($tag_id = null)
+
+    public function actionChangeCategory()
     {
-        /** @var Request $request */
-        $request = Yii::$app->request;
+        $request    = Yii::$app->request;
+        $result     = 0;
+        $tagId      = (int) $request->post()['tag_id'];
+        $categoryId = (int) $request->post()['category_id'];
+        /** @var Tag $tag */
+        $tag        = Tag::findOne($tagId);
+        /** @var Category $category */
+        $category   = Category::findOne($categoryId);
 
-        if ($request->getIsPost()) {
-
-            $tagId      = (int) $request->post()['tag_id'];
-            $categoryId = (int) $request->post()['category_id'];
-            $isCategory = Category::find()->where(['id' => (int) $categoryId])->count();
-
-            if ($isCategory) {
-                $tag = Tag::find()->where(['id' => $tagId])->one();
-                $tag->category_id = $categoryId;
-                $tag->save(false);
-            }
-
-            return $this->redirect(['tag_category']);
+        if ($tag && $category) {
+            $tag->category_id = $categoryId;
+            $tag->save(false);
+            $result = 'ok';
         }
 
-        return $this->render('tag_category', [
-            'tag_id'         => $tag_id,
-            'categories' => Category::find()->getAllAsEnum(),
-            'tags'       => Tag::find()->getAllWithoutCategoryAsEnum(),
-        ]);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        return [
+            'result' => $result
+        ];
     }
 
 
@@ -159,7 +156,6 @@ class TagController extends BaseController
     private function findCategories()
     {
         $categories = Category::find()->active()->all();
-        $enum = ['0' => ''];
 
         foreach ($categories as $category) {
             $enum[$category->id] = $category->getTitle();

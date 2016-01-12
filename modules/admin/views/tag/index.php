@@ -6,6 +6,8 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TagSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $changeCategoryUrl string */
+/* @var $categories array */
 
 $this->title = Yii::t('app', 'Tags');
 $this->params['breadcrumbs'][] = $this->title;
@@ -22,27 +24,51 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'options' => [
+            'class' => 'js_grid_tags'
+        ],
         'columns' => [
             'id',
             'tag',
             'category_id' => [
-                'label' => \Yii::t('app', 'Категория'),
+                'attribute' => 'category_id',
                 'format' => 'raw',
                 'value' => function ($data) use ($categories) {
                     /** @var app\models\Tag $data */
                     return Html::dropDownList(
-                        "[item_category][{$data->id}]",
+                        "tag_id_{$data->id}",
                         $data->category_id,
-                        $categories,
-                        ['class' => 'js_select_category']
+                        array_merge(['0' => ''], $categories),
+                        ['class' => 'js_select_category form-control']
                     );
-                }
+                },
+                'filter' => $categories
             ],
-            'category_id',
-            'status',
+            'status' => [
+                'attribute' => 'status',
+                'filter' => $enumTagStatus
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 
 </div>
+<script>
+    var changeTagCategoryUrl = '<?=$changeCategoryUrl;?>';
+    $('.js_grid_tags').on('change', '.js_select_category', function () {
+        var tagId = $(this).attr('name').replace('tag_id_', '');
+        var categoryId = $(this).val();
+
+        $.post(
+            changeTagCategoryUrl,
+            {'tag_id' : tagId, 'category_id' : categoryId},
+            function (response) {
+                if (response.result == 'ok') {
+                    alert('Saved');
+                }
+            },
+            'json'
+        );
+    });
+</script>
