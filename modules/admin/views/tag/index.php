@@ -8,8 +8,9 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $changeCategoryUrl string */
 /* @var $categories array */
+/* @var $enumTagStatus array */
 
-$this->title = Yii::t('app', 'Tags');
+$this->title = Yii::t('app', 'Тэги');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tag-index">
@@ -18,7 +19,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Tag'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(
+            Yii::t('app', 'Добавить {element}', ['element' => Yii::t('app', 'Тэг')]),
+            ['create'],
+            ['class' => 'btn btn-success']
+        ) ?>
     </p>
 
     <?= GridView::widget([
@@ -28,7 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'js_grid_tags'
         ],
         'columns' => [
-            'id',
             'tag',
             'category_id' => [
                 'attribute' => 'category_id',
@@ -44,11 +48,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter' => $categories
             ],
-            'status' => [
+            [
                 'attribute' => 'status',
-                'filter' => $enumTagStatus
-            ],
+                'filter'    => $enumTagStatus,
+                'value'     => function ($data) use ($enumTagStatus) {
+                    return $enumTagStatus[$data->status];
+                },
 
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
