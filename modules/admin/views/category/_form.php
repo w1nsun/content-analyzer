@@ -12,7 +12,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'title_ru')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'title_en')->textInput(['maxlength' => true]) ?>
+
 
     <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
 

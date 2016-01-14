@@ -46,4 +46,11 @@ class CategoryQuery extends \yii\db\ActiveQuery
 
         return $enum;
     }
+
+    public function active()
+    {
+        $this->andFilterWhere(['=', 'status', Category::STATUS_ACTIVE]);
+
+        return $this;
+    }
 }

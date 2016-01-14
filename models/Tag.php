@@ -44,10 +44,24 @@ class Tag extends \yii\db\ActiveRecord
     {
         return [
             'id'          => Yii::t('app', 'ID'),
-            'tag'         => Yii::t('app', 'Tag'),
-            'category_id' => Yii::t('app', 'Category ID'),
-            'status'      => Yii::t('app', 'Status'),
+            'tag'         => Yii::t('app', 'Тэг'),
+            'category_id' => Yii::t('app', 'Категория'),
+            'status'      => Yii::t('app', 'Статус'),
         ];
+    }
+
+    /**
+     * @param null $status
+     * @return array
+     */
+    public static function enumStatus($status=null)
+    {
+        $enum = [
+            self::STATUS_ACTIVE => Yii::t('app', 'Активен'),
+            self::STATUS_DISABLE => Yii::t('app', 'Удален'),
+        ];
+
+        return $status === null ? $enum : $enum[$status];
     }
 
     /**
