@@ -3,8 +3,10 @@
 namespace app\controllers;
 
 use app\models\forms\SignupForm;
+use app\models\LikesLog;
 use app\models\User;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -102,9 +104,10 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-            $user           = new User();
-            $user->email    = $model->email;
-            $user->password = $model->password;
+            $user               = new User();
+            $user->email        = $model->email;
+            $user->password     = $model->password;
+            $user->access_token = '';
 
             $user->register();
 
@@ -115,6 +118,34 @@ class SiteController extends Controller
 
         return $this->render('sign_up_form', [
             'model' => $model
+        ]);
+    }
+
+    public function actionTrends()
+    {
+        $likesTable = LikesLog::tableName();
+        $totalQuery = '`facebook` + `twitter` + `pinterest` + `linkedin` + `google_plus` + `vkontakte`';
+        $joinTable = "(SELECT article_id, MAX(created_at) AS mcreated_at FROM $likesTable GROUP BY article_id) AS tmp";
+        $joinOn =  "$likesTable.article_id = tmp.article_id AND $likesTable.created_at = mcreated_at";
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => LikesLog::find()->innerJoin($joinTable, $joinOn)->joinWith(['article']),
+            'sort'  => [
+                'attributes' => [
+                    'article.title', 'facebook', 'twitter', 'pinterest', 'linkedin', 'google_plus', 'vkontakte',
+                    'total' => [
+                        'asc'   => ['created_at' => SORT_ASC, $totalQuery => SORT_ASC],
+                        'desc'  => ['created_at' => SORT_DESC, $totalQuery => SORT_DESC],
+                    ],
+                ],
+                'defaultOrder' => [
+                    'total' => SORT_DESC
+                ]
+            ]
+        ]);
+
+        return $this->render('trends', [
+            'dataProvider' => $dataProvider,
         ]);
     }
 }

@@ -56,6 +56,7 @@ AppAsset::register($this);
             'encodeLabels' => false,
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
+                ['label' => Yii::t('app', 'Тренды'), 'url' => ['/site/trends']],
                 ['label' => Yii::t('app', 'Контакты'), 'url' => ['/site/contact']],
                 [
                     'label' => '<i class="glyphicon glyphicon-cog"></i> ' . Yii::t('app', 'Панель управления'),
