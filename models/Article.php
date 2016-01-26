@@ -18,6 +18,12 @@ use app\components\ActiveRecord;
  * @property integer $updated_at
  * @property integer $created_at
  * @property integer $status
+ * @property integer $likes_facebook
+ * @property integer $likes_twitter
+ * @property integer $likes_pinterest
+ * @property integer $likes_linkedin
+ * @property integer $likes_google_plus
+ * @property integer $likes_vkontakte
  *
  * @property Resource $resource
  */
