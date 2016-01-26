@@ -6,6 +6,9 @@ use app\models\Article;
 use app\models\forms\SignupForm;
 use app\models\User;
 use Yii;
+use yii\authclient\BaseClient;
+use yii\authclient\OAuth2;
+use yii\authclient\OAuthToken;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -46,6 +49,10 @@ class SiteController extends Controller
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'successCallback'],
             ],
         ];
     }
@@ -100,13 +107,13 @@ class SiteController extends Controller
     public function actionSignup()
     {
         $model = new SignupForm();
+        $model->setScenario(SignupForm::SCENARIO_DEFAULT);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
             $user               = new User();
             $user->email        = $model->email;
             $user->password     = $model->password;
-            $user->access_token = '';
 
             $user->register();
 
@@ -125,5 +132,30 @@ class SiteController extends Controller
         return $this->render('trends', [
             'trends' => Article::find()->trends(),
         ]);
+    }
+
+    public function successCallback(BaseClient $client)
+    {
+        $attributes = $client->getUserAttributes();
+        $signUpForm = new SignupForm();
+        $signUpForm->setScenario(SignupForm::SCENARIO_SOCIAL);
+        $signUpForm->email = $attributes['email'];
+
+        if ($signUpForm->validate()) {
+            $user              = new User();
+            $user->email       = $signUpForm->email;
+            $user->password    = md5(time());
+            $user->social_id   = $attributes['id'];
+            $user->social_name = $client->getId();
+
+            $user->register();
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Вы успешно зарегистрированы'));
+        } else {
+            $errors = $signUpForm->getErrors();
+            $error = reset($errors)[0];
+            Yii::$app->session->setFlash('danger', $error);
+        }
+
+        return false;
     }
 }

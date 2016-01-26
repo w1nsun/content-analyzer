@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use yii\authclient\widgets\AuthChoice;
 /* @var $this yii\web\View */
 /* @var $model app\models\forms\RegisterForm */
 /* @var $form ActiveForm */
@@ -26,3 +26,13 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div><!-- site-register_form -->
+
+<?php $authAuthChoice = AuthChoice::begin([
+    'baseAuthUrl' => ['site/auth']
+]); ?>
+<ul>
+    <?php foreach ($authAuthChoice->getClients() as $client): ?>
+        <li><?php $authAuthChoice->clientLink($client) ?></li>
+    <?php endforeach; ?>
+</ul>
+<?php AuthChoice::end(); ?>

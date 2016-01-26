@@ -2,11 +2,15 @@
 
 namespace app\models\forms;
 
+use app\models\User;
 use yii\base\Model;
 use Yii;
 
 class SignupForm extends Model
 {
+    const SCENARIO_DEFAULT = 'default';
+    const SCENARIO_SOCIAL = 'social';
+
     /**
      * @var string
      */
@@ -28,11 +32,27 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            [['email', 'password', 'repeat_password'], 'required'],
-            ['email', 'email'],
-            ['password', 'validatePassword'],
-            ['password', 'compare', 'compareAttribute' => 'repeat_password'],
+            [['email', 'password', 'repeat_password'], 'required', 'on' => self::SCENARIO_DEFAULT],
+            ['email', 'email', 'on' => self::SCENARIO_DEFAULT],
+            ['email', 'email', 'on' => self::SCENARIO_SOCIAL],
+            ['password', 'validatePassword', 'on' => self::SCENARIO_DEFAULT],
+            ['password', 'compare', 'compareAttribute' => 'repeat_password', 'on' => self::SCENARIO_DEFAULT],
+            ['email', 'isRegisteredUser'],
         ];
+    }
+
+    public function isRegisteredUser($attribute, $params)
+    {
+        $user = User::find()->where(['email' => $this->email])->one();
+        if ($user) {
+            $this->addError(
+                $attribute,
+                \Yii::t('app', 'Пользователь с таким email ({email}) уже зарегистрирован', ['email' => $this->email])
+            );
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -64,6 +64,11 @@ AppAsset::register($this);
                     'visible' => !Yii::$app->user->isGuest
                 ],
                 [
+                    'label'   => Yii::t('app', 'Регистрация'),
+                    'url'     => ['/site/signup'],
+                    'visible' => Yii::$app->user->isGuest
+                ],
+                [
                     'label'   => Yii::t('app', 'Войти'),
                     'url'     => ['/site/login'],
                     'visible' => Yii::$app->user->isGuest
@@ -73,6 +78,14 @@ AppAsset::register($this);
         ?>
         <?php NavBar::end()?>
         <div class="container">
+
+            <?php if($flashes = Yii::$app->session->getAllFlashes()):?>
+                <?php foreach($flashes as $flashType => $message):?>
+                    <div class="alert alert-<?=$flashType;?>" role="alert"><?=$message;?></div>
+                <?php endforeach;?>
+            <?php endif;?>
+
+
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>

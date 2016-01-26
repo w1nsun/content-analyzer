@@ -18,6 +18,16 @@ $config = [
         ],
     ],
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => $localParams['params']['facebook_api']['app_id'],
+                    'clientSecret' => $localParams['params']['facebook_api']['app_secret'],
+                ],
+            ],
+        ],
         'eventHandlers' => [
             'class' => 'app\components\EventHandlers'
         ],
