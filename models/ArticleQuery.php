@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\components\ActiveQuery;
+use yii\data\ActiveDataProvider;
 
 /**
  * This is the ActiveQuery class for [[Article]].
@@ -69,5 +70,36 @@ class ArticleQuery extends ActiveQuery
         $this->andFilterWhere(['>=', 'created_at', (time()-(3600*24*5))]);
 
         return $this;
+    }
+
+    /**
+     * @return ActiveDataProvider
+     */
+    public function trends()
+    {
+        $totalQuery = '`likes_facebook` + `likes_twitter` + `likes_pinterest` + `likes_linkedin` + `likes_google_plus` + `likes_vkontakte`';
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Article::find()->where(['status' => Article::STATUS_ACTIVE]),
+            'sort'  => [
+                'attributes' => [
+                    'likes_facebook',
+                    'likes_twitter',
+                    'likes_pinterest',
+                    'likes_linkedin',
+                    'likes_google_plus',
+                    'likes_vkontakte',
+                    'totalLikes' => [
+                        'asc'   => ['created_at' => SORT_ASC, $totalQuery => SORT_ASC],
+                        'desc'  => ['created_at' => SORT_DESC, $totalQuery => SORT_DESC],
+                    ],
+                ],
+                'defaultOrder' => [
+                    'totalLikes' => SORT_DESC
+                ]
+            ]
+        ]);
+
+        return $dataProvider;
     }
 }

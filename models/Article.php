@@ -70,15 +70,21 @@ class Article extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'          => Yii::t('app', 'ID'),
-            'resource_id' => Yii::t('app', 'ID Ресурса'),
-            'title'       => Yii::t('app', 'Заголовок'),
-            'description' => Yii::t('app', 'Описание'),
-            'url'         => Yii::t('app', 'Url'),
-            'type'        => Yii::t('app', 'Тип'),
-            'updated_at'  => Yii::t('app', 'Время редактирования'),
-            'created_at'  => Yii::t('app', 'Время создания'),
-            'status'      => Yii::t('app', 'Статус'),
+            'id'                => Yii::t('app', 'ID'),
+            'resource_id'       => Yii::t('app', 'ID Ресурса'),
+            'title'             => Yii::t('app', 'Заголовок'),
+            'description'       => Yii::t('app', 'Описание'),
+            'url'               => Yii::t('app', 'Url'),
+            'type'              => Yii::t('app', 'Тип'),
+            'updated_at'        => Yii::t('app', 'Время редактирования'),
+            'created_at'        => Yii::t('app', 'Время создания'),
+            'status'            => Yii::t('app', 'Статус'),
+            'likes_facebook'    => Yii::t('app', 'Facebook'),
+            'likes_twitter'     => Yii::t('app', 'Twitter'),
+            'likes_pinterest'   => Yii::t('app', 'Pinterest'),
+            'likes_linkedin'    => Yii::t('app', 'LinkedIn'),
+            'likes_google_plus' => Yii::t('app', 'Google Plus'),
+            'likes_vkontakte'   => Yii::t('app', 'Vkontakte'),
         ];
     }
 
@@ -142,5 +148,15 @@ class Article extends ActiveRecord
         ];
 
         return $type === null ? $enum : $enum[$type];
+    }
+
+    public function getTotalLikes()
+    {
+        return $this->likes_facebook +
+                $this->likes_twitter +
+                $this->likes_pinterest +
+                $this->likes_linkedin +
+                $this->likes_google_plus +
+                $this->likes_vkontakte;
     }
 }

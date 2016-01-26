@@ -97,7 +97,7 @@ class ArticleLikesWorker
         $this->initSocialContainer();
 
         while (true) {
-            $numLikes = [];
+            $likesByArticle = [];
             $articles = Article::find()
                             ->recentActive()
                             ->offset($this->offset)
@@ -123,7 +123,7 @@ class ArticleLikesWorker
                         continue;
                     }
 
-                    $numLikes[$article->id][$socialName] = $num;
+                    $likesByArticle[$article->id][$socialName] = $num;
                 }
             }
 
@@ -131,21 +131,57 @@ class ArticleLikesWorker
             unset($articles);
 
             $this->offset += $this->limit;
-            $this->log($numLikes);
+            $this->updateCountLikes($likesByArticle);
+            $this->log($likesByArticle);
 
-            $numLikes = null;
-            unset($numLikes);
+            $likesByArticle = null;
+            unset($likesByArticle);
         }
     }
 
     /**
-     * @param $numLikes
+     * @param $likesByArticle
      */
-    protected function log($numLikes)
+    protected function log($likesByArticle)
     {
-        foreach ($numLikes as $articleId => $numLikesBySocial) {
-            $data = array_merge(['article_id' => $articleId], $numLikesBySocial);
+        foreach ($likesByArticle as $articleId => $likesBySocial) {
+            $data = array_merge(['article_id' => $articleId], $likesBySocial);
             $this->likesLog->log($data);
+        }
+    }
+
+    /**
+     * @param array $likesByArticle
+     * @throws \Exception
+     */
+    protected function updateCountLikes(array $likesByArticle)
+    {
+        foreach ($likesByArticle as $articleId => $likesBySocial) {
+            /** @var Article $article */
+            $article = Article::findOne($articleId);
+            if (!$article) {
+                \Yii::warning(sprintf('Article with ID: %s not found!', $articleId));
+                continue;
+            }
+
+            $article->likes_facebook    = $likesBySocial[Facebook::NAME];
+            $article->likes_google_plus = $likesBySocial[GooglePlus::NAME];
+            $article->likes_pinterest   = $likesBySocial[Pinterest::NAME];
+            $article->likes_linkedin    = $likesBySocial[Linkedin::NAME];
+            $article->likes_twitter     = $likesBySocial[Twitter::NAME];
+            $article->likes_vkontakte   = $likesBySocial[Vkontakte::NAME];
+
+            $article->update(
+                false,
+                [
+                    'likes_facebook',
+                    'likes_google_plus',
+                    'likes_pinterest',
+                    'likes_linkedin',
+                    'likes_twitter',
+                    'likes_vkontakte'
+                ]
+            );
         }
     }
 }
