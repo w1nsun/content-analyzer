@@ -7,8 +7,6 @@ use app\models\forms\SignupForm;
 use app\models\User;
 use Yii;
 use yii\authclient\BaseClient;
-use yii\authclient\OAuth2;
-use yii\authclient\OAuthToken;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -52,7 +50,11 @@ class SiteController extends Controller
             ],
             'auth' => [
                 'class' => 'yii\authclient\AuthAction',
-                'successCallback' => [$this, 'successCallback'],
+                'successCallback' => [$this, 'successAuthCallback'],
+            ],
+            'social-signup' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'successSignUpCallback'],
             ],
         ];
     }
@@ -68,7 +70,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new LoginForm(['scenario' => LoginForm::SCENARIO_DEFAULT]);
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
@@ -134,7 +136,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function successCallback(BaseClient $client)
+    public function successSignUpCallback(BaseClient $client)
     {
         $attributes = $client->getUserAttributes();
         $signUpForm = new SignupForm();
@@ -152,6 +154,23 @@ class SiteController extends Controller
             Yii::$app->session->setFlash('success', Yii::t('app', 'Вы успешно зарегистрированы'));
         } else {
             $errors = $signUpForm->getErrors();
+            $error = reset($errors)[0];
+            Yii::$app->session->setFlash('danger', $error);
+        }
+
+        return false;
+    }
+
+
+    public function successAuthCallback(BaseClient $client)
+    {
+        $attributes = $client->getUserAttributes();
+        $loginForm = new LoginForm(['scenario' => LoginForm::SCENARIO_SOCIAL]);
+        $loginForm->social = $client->getId();
+        $loginForm->social_id = $attributes['id'];
+
+        if (!$loginForm->socialLogin()) {
+            $errors = $loginForm->getErrors();
             $error = reset($errors)[0];
             Yii::$app->session->setFlash('danger', $error);
         }

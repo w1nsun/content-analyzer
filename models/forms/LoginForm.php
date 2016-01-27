@@ -11,6 +11,8 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
+    const SCENARIO_DEFAULT = 'default';
+    const SCENARIO_SOCIAL = 'social';
 
     /**
      * @var string
@@ -21,6 +23,17 @@ class LoginForm extends Model
      * @var string
      */
     public $password;
+
+
+    /**
+     * @var string
+     */
+    public $social;
+
+    /**
+     * @var string
+     */
+    public $social_id;
 
 
     /**
@@ -42,11 +55,13 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'password'], 'required'],
+            [['username', 'password'], 'required', 'on' => self::SCENARIO_DEFAULT],
             // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
+            ['rememberMe', 'boolean', 'on' => self::SCENARIO_DEFAULT],
             // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            ['password', 'validatePassword', 'on' => self::SCENARIO_DEFAULT],
+
+            [['social', 'social_id'], 'required', 'on' => self::SCENARIO_SOCIAL],
         ];
     }
 
@@ -82,10 +97,33 @@ class LoginForm extends Model
     }
 
     /**
+     * Logs in a user using the provided username and password.
+     * @return boolean whether the user is logged in successfully
+     */
+    public function socialLogin()
+    {
+        if ($this->validate()) {
+            return Yii::$app->user->login($this->getSocialUser(), 2592000);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Finds user by [[username]]
      *
      * @return User|null
      */
+    public function getSocialUser()
+    {
+        if ($this->_user === false) {
+            $this->_user = User::find()->where(['social_name' => $this->social, 'social_id' => $this->social_id])->one();
+        }
+
+        return $this->_user;
+    }
+
+
     public function getUser()
     {
         if ($this->_user === false) {
