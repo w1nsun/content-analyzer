@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\components\TokenGenerator;
 use app\components\UserTokenManager;
 use app\models\User;
 use yii\web\Controller;
