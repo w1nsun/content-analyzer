@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\User;
 use yii\web\Controller;
 
 class ProfileController extends Controller
@@ -10,6 +11,10 @@ class ProfileController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $user = User::findOne(\Yii::$app->getUser()->getId());
+
+        return $this->render('index', [
+            'user' => $user
+        ]);
     }
 }
