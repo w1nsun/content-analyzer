@@ -1,13 +1,25 @@
 <?php
-use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $user app\models\User */
 $this->title = \Yii::t('app', 'Профиль');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div>ID: <?= $user->id;?></div>
-<div>Email: <?= $user->email;?></div>
-<div>Token: <?= $user->access_token;?></div>
-<div>Social: <?= $user->social_name;?></div>
-<div>Social ID: <?= $user->social_id;?></div>
+
+<?= \yii\widgets\DetailView::widget([
+    'model' => $user,
+    'attributes' => [
+        'id',
+        'email',
+        'access_token',
+        'social_name',
+        'social_id',
+        'status',
+    ],
+]) ?>
+
+<div class="well well-lg">
+    <a href="<?=\yii\helpers\Url::to('/profile/generate-access-token');?>" class="btn btn-primary">
+        <?=\Yii::t('app', 'Сгенерировать Access Token');?>
+    </a>
+</div>
