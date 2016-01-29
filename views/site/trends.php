@@ -24,9 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'content'   => function(Article $model) {
                     return
                         html::tag('div', Article::enumType($model->type), ['class' => 'article-type']) .
-                        Html::a($model->title, $model->url) .
+                        Html::a($model->title, $model->url, ['target' => '_blank']) .
                         html::tag('div', Yii::$app->formatter->asDatetime($model->created_at));
-
                 }
             ],
             'likes_facebook',
