@@ -143,7 +143,7 @@ class ArticleController extends Controller
         }
 
         $tags  = array_map('strtolower', $tags);
-        $tags  = array_map('trim', $tags);
+        $tags  = array_unique(array_map('trim', $tags));
         $tagQuery = Tag::find();
 
         $tagQuery->batchAdd($tags);

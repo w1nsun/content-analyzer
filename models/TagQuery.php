@@ -70,4 +70,25 @@ class TagQuery extends \yii\db\ActiveQuery
 
         return $enum;
     }
+
+    /**
+     * @param $articleId
+     * @return Tag[]|array
+     */
+    public function findByArticle($articleId)
+    {
+        $rows = (new \yii\db\Query())
+            ->select(['tag_id'])
+            ->from('article_tag')
+            ->distinct()
+            ->where(['article_id' =>$articleId])
+            ->all();
+
+        $ids = array_column($rows, 'tag_id');
+        array_walk($ids, function(&$val) {
+            $val = (int) $val;
+        });
+
+        return $this->where(['id' => $ids])->all();
+    }
 }

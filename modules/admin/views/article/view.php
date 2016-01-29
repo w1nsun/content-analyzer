@@ -37,6 +37,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'updated_at',
             'created_at',
             'status',
+            'tags' => [
+                'format' => 'raw',
+                'label' => 'tags',
+                'value' => $this->render('_tags', ['model' => $model]),
+            ]
         ],
     ]) ?>
 

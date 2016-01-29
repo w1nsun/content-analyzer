@@ -159,4 +159,9 @@ class Article extends ActiveRecord
                 $this->likes_google_plus +
                 $this->likes_vkontakte;
     }
+
+    public function getTags()
+    {
+        return Tag::find()->findByArticle($this->id);
+    }
 }
