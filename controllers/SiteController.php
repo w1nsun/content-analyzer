@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\image\ImageManager;
 use app\models\Article;
 use app\models\forms\SignupForm;
 use app\models\User;
@@ -61,6 +62,9 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+//        $im = new ImageManager('/var/www/analyzer/web/files/1/0/9/article56ab3901343bd.jpg');
+//        $im->addSize(300, 200)->addSize(200, 300)->addSize(2000, 1560)->doThumbnail();
+
         return $this->render('index');
     }
 
