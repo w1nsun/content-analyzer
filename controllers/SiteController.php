@@ -69,6 +69,7 @@ class SiteController extends Controller
 //http://www.slideshare.net/AltorosBY/elasticsearch-26227465
         //https://gist.github.com/svartalf/4465752
         //https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lang-analyzer.html
+        //https://github.com/imotov/elasticsearch-analysis-morphology
         /** @var Client $es */
         $es = Yii::$container->get('elasticsearch');
 //        $params = [
