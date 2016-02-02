@@ -73,11 +73,11 @@ class SiteController extends Controller
         /** @var Client $es */
         $es = Yii::$container->get('elasticsearch');
 //        $params = [
-//            'index' => 'analyzer_article',
+//            'index' => 'my_index',
 //            'body' => [
 //                'settings' => [
-//                    'number_of_shards' => 1,
-//                    'number_of_replicas' => 0,
+////                    'number_of_shards' => 1,
+////                    'number_of_replicas' => 0,
 //                    'analysis' => [
 //                        'filter' => [
 //                            'russian_stop' => [
@@ -97,17 +97,19 @@ class SiteController extends Controller
 ////                            ],
 //                            'russian_stemmer' => [
 //                                'type' => 'stemmer',
-//                                'language' => 'russian'
+//                                'language' => 'russian',
 //                            ]
 //                        ],
 //                        'analyzer' => [
-//                            'russian' => [
+//                            'my_russian_analyzer' => [
 //                                'tokenizer'=>  'standard',
-//                                'char_filter' => ['html_strip'],
+////                                'char_filter' => ['html_strip'],
 //                                'filter'=> [
+//                                    'standard',
 //                                    'lowercase',
 //                                    'russian_stop',
 ////                                    'russian_morphology',
+////                                    'english_morphology',
 ////                                    'russian_keywords',
 //                                    'russian_stemmer'
 //                                ]
@@ -116,18 +118,18 @@ class SiteController extends Controller
 //                    ]
 //                ],
 //                'mappings' => [
-//                    'analyzer_article' => [
+//                    'my_type' => [
 //                        '_source' => [
 //                            'enabled' => true
 //                        ],
 //                        'properties' => [
 //                            'title' => [
 //                                'type' => 'string',
-//                                'analyzer' => 'russian'
+//                                'analyzer' => 'my_russian_analyzer'
 //                            ],
 //                            'description' => [
 //                                'type' => 'string',
-//                                'analyzer' => 'russian'
+//                                'analyzer' => 'my_russian_analyzer'
 //                            ],
 //                        ]
 //                    ]
@@ -135,30 +137,36 @@ class SiteController extends Controller
 //            ]
 //        ];
 //        $es->indices()->create($params);
-
+//
 //        $params = [
-//            'index' => 'analyzer_article',
-//            'type' => 'analyzer_article',
+//            'index' => 'my_index',
+//            'type' => 'my_type',
 //            'id' => '1',
 //            'body' => ['title' => 'Заголовок', 'description' => 'Маше купили футбольный мяч']
 //        ];
 //        $response = $es->index($params);
+        $params = [
+            'index' => 'my_index',
+            'type' => 'my_type',
+            'body' => [
+                'query' => [
+                    'match' => [
+//                        'title' => 'мяч',
+                        'description' => 'футбольн',
+                    ]
+                ]
+            ]
+        ];
+
+        $response = $es->search($params);
+        vd($response);
+
 //        $params = [
 //            'index' => 'analyzer_article',
-//            'type' => 'analyzer_article',
-//            'body' => [
-//                'query' => [
-//                    'match' => [
-////                        'title' => 'мяч',
-//                        'description' => 'футбол',
-//                    ]
-//                ]
-//            ]
+//            'type' => 'analyzer_article'
 //        ];
 //
-//        $response = $es->search($params);
-
-//        vd($response);
+//        $es->indices()->deleteMapping($params);
 
         return $this->render('index');
     }
