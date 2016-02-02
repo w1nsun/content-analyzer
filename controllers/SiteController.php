@@ -6,6 +6,7 @@ use app\components\image\ImageManager;
 use app\models\Article;
 use app\models\forms\SignupForm;
 use app\models\User;
+use Elasticsearch\Client;
 use Yii;
 use yii\authclient\BaseClient;
 use yii\filters\AccessControl;
@@ -64,6 +65,99 @@ class SiteController extends Controller
     {
 //        $im = new ImageManager('/var/www/analyzer/web/files/1/0/9/article56ab3901343bd.jpg');
 //        $im->addSize(300, 200)->addSize(200, 300)->addSize(2000, 1560)->doThumbnail();
+
+//http://www.slideshare.net/AltorosBY/elasticsearch-26227465
+        //https://gist.github.com/svartalf/4465752
+        //https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lang-analyzer.html
+        /** @var Client $es */
+        $es = Yii::$container->get('elasticsearch');
+//        $params = [
+//            'index' => 'analyzer_article',
+//            'body' => [
+//                'settings' => [
+//                    'number_of_shards' => 1,
+//                    'number_of_replicas' => 0,
+//                    'analysis' => [
+//                        'filter' => [
+//                            'russian_stop' => [
+//                                'type' => 'stop',
+//                                'stopwords' => 'а,без,более,бы,был,была,были,было,быть,в,вам,вас,весь,во,вот,все,'.
+//                                                'всего,всех,вы,где,да,даже,для,до,его,ее,если,есть,еще,же,за,здесь,и,'.
+//                                                'из,или,им,их,к,как,ко,когда,кто,ли,либо,мне,может,мы,на,надо,наш,не,'.
+//                                                'него,нее,нет,ни,них,но,ну,о,об,однако,он,она,они,оно,от,очень,по,под,'.
+//                                                'при,с,со,так,также,такой,там,те,тем,то,того,тоже,той,только,том,ты,у,'.
+//                                                'уже,хотя,чего,чей,чем,что,чтобы,чье,чья,эта,эти,это,я,a,an,and,are,'.
+//                                                'as,at,be,but,by,for,if,in,into,is,it,no,not,of,on,or,such,that,the'.
+//                                                ',their,then,there,these,they,this,to,was,will,with'
+//                            ],
+////                            'russian_keywords' => [
+////                                'type' => 'keyword_marker',
+////                                'keywords' => []
+////                            ],
+//                            'russian_stemmer' => [
+//                                'type' => 'stemmer',
+//                                'language' => 'russian'
+//                            ]
+//                        ],
+//                        'analyzer' => [
+//                            'russian' => [
+//                                'tokenizer'=>  'standard',
+//                                'char_filter' => ['html_strip'],
+//                                'filter'=> [
+//                                    'lowercase',
+//                                    'russian_stop',
+////                                    'russian_morphology',
+////                                    'russian_keywords',
+//                                    'russian_stemmer'
+//                                ]
+//                            ]
+//                        ]
+//                    ]
+//                ],
+//                'mappings' => [
+//                    'analyzer_article' => [
+//                        '_source' => [
+//                            'enabled' => true
+//                        ],
+//                        'properties' => [
+//                            'title' => [
+//                                'type' => 'string',
+//                                'analyzer' => 'russian'
+//                            ],
+//                            'description' => [
+//                                'type' => 'string',
+//                                'analyzer' => 'russian'
+//                            ],
+//                        ]
+//                    ]
+//                ]
+//            ]
+//        ];
+//        $es->indices()->create($params);
+
+//        $params = [
+//            'index' => 'analyzer_article',
+//            'type' => 'analyzer_article',
+//            'id' => '1',
+//            'body' => ['title' => 'Заголовок', 'description' => 'Маше купили футбольный мяч']
+//        ];
+//        $response = $es->index($params);
+//        $params = [
+//            'index' => 'analyzer_article',
+//            'type' => 'analyzer_article',
+//            'body' => [
+//                'query' => [
+//                    'match' => [
+////                        'title' => 'мяч',
+//                        'description' => 'футбол',
+//                    ]
+//                ]
+//            ]
+//        ];
+//
+//        $response = $es->search($params);
+
+//        vd($response);
 
         return $this->render('index');
     }

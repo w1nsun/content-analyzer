@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Elasticsearch\Client;
 use Yii;
 use app\components\ActiveRecord;
 
@@ -164,4 +165,15 @@ class Article extends ActiveRecord
     {
         return Tag::find()->findByArticle($this->id);
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+//        /** @var Client $elasticsearch */
+//        $elasticsearch = \Yii::$container->get('elasticsearch');
+//        $elasticsearch->
+    }
+
+
 }
