@@ -156,7 +156,7 @@ class TagController extends BaseController
     private function findCategories()
     {
         $categories = Category::find()->active()->all();
-
+        $enum = [];
         foreach ($categories as $category) {
             $enum[$category->id] = $category->getTitle();
         }

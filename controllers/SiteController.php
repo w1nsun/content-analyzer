@@ -2,11 +2,9 @@
 
 namespace app\controllers;
 
-use app\components\image\ImageManager;
 use app\models\Article;
 use app\models\forms\SignupForm;
 use app\models\User;
-use Elasticsearch\Client;
 use Yii;
 use yii\authclient\BaseClient;
 use yii\filters\AccessControl;

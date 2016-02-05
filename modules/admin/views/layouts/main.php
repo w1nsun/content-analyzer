@@ -86,6 +86,10 @@ AdminAsset::register($this);
                             'label'       => Yii::t('app', 'Пользователи'),
                             'url'         => ['/admin/user/index'],
                         ],
+                        [
+                            'label'       => Yii::t('app', 'Elastic'),
+                            'url'         => ['/admin/elastic/index'],
+                        ],
                     ],
                 ])
                 ?>

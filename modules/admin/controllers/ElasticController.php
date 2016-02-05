@@ -2,6 +2,8 @@
 
 namespace app\modules\admin\controllers;
 
+use Elasticsearch\Client;
+use yii\helpers\BaseVarDumper;
 
 class ElasticController extends BaseController
 {
@@ -16,7 +18,7 @@ class ElasticController extends BaseController
         //https://github.com/imotov/elasticsearch-analysis-morphology
         //https://www.elastic.co/guide/en/elasticsearch/guide/current/controlling-stemming.html#controlling-stemming
         /** @var Client $es */
-        $es = Yii::$container->get('elasticsearch');
+        $es = \Yii::$container->get('elasticsearch');
 //        $params = [
 //            'index' => 'my_index',
 //            'body' => [
@@ -90,21 +92,21 @@ class ElasticController extends BaseController
 //            'body' => ['title' => 'Заголовок', 'description' => 'Маше купили футбольный мяч']
 //        ];
 //        $response = $es->index($params);
-        $params = [
-            'index' => 'my_index',
-            'type' => 'my_type',
-            'body' => [
-                'query' => [
-                    'match' => [
-//                        'title' => 'мяч',
-                        'description' => 'футбольн',
-                    ]
-                ]
-            ]
-        ];
-
-        $response = $es->search($params);
-        vd($response);
+//        $params = [
+//            'index' => 'my_index',
+//            'type' => 'my_type',
+//            'body' => [
+//                'query' => [
+//                    'match' => [
+////                        'title' => 'мяч',
+//                        'description' => 'футбольн',
+//                    ]
+//                ]
+//            ]
+//        ];
+//
+//        $response = $es->search($params);
+//        vd($response);
 
 //        $params = [
 //            'index' => 'analyzer_article',
@@ -114,6 +116,25 @@ class ElasticController extends BaseController
 //        $es->indices()->deleteMapping($params);
 
 
-        $this->render('index');
+        return $this->render('index');
+    }
+
+
+    public function actionMapping()
+    {
+        $mapping = $this->getElasticSearch()->indices()->getMapping();
+
+        return $this->render('mapping', [
+            'mapping' => BaseVarDumper::dumpAsString($mapping, 10, true)
+        ]);
+    }
+
+    /**
+     * @return Client
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getElasticSearch()
+    {
+        return \Yii::$container->get('elasticsearch');
     }
 }
