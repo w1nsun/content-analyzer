@@ -33,7 +33,10 @@ iptables -A INPUT -p tcp -m multiport --ports 1337 -m comment --comment "000 tcp
 netstat -ntpua | grep 1337
 iptables-save
 
-6.
+6. установка nodejs и зависимостей
+
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+sudo apt-get install -y nodejs
 
 npm install request --no-bin-links
 cd nodejs
