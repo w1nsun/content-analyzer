@@ -7,7 +7,7 @@ class m151123_095009_add_likes_log extends Migration
 {
     public function up()
     {
-        $this->execute('CREATE TABLE analyzer.likes_log
+        $this->execute('CREATE TABLE `likes_log`
             (
                 id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
                 article_id INT UNSIGNED NOT NULL,
