@@ -6,7 +6,7 @@ $localParams = require(__DIR__ . '/local_params.php');
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'eventHandlers'],
     'language' => 'ru-RU',
     'sourceLanguage' => 'ru-RU',
     'modules' => [
@@ -18,6 +18,19 @@ $config = [
         ],
     ],
     'components' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => $localParams['params']['facebook_api']['app_id'],
+                    'clientSecret' => $localParams['params']['facebook_api']['app_secret'],
+                ],
+            ],
+        ],
+        'eventHandlers' => [
+            'class' => 'app\components\EventHandlers'
+        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
@@ -39,10 +52,8 @@ $config = [
             'class' => 'app\components\ContentLanguage',
         ],
         'fs' => [
-            'class'          => 'app\components\FileSystem',
-            'imagesDirAlias' => '@webroot/files',
-            'maxDirs'        => 1000,
-            'levelSubDirs'   => 3
+            'class' => 'app\components\FileSystem',
+            'fsDir' => '@webroot/files',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -101,7 +112,7 @@ $config = [
         ],
         'db' => $localParams['db'],
     ],
-    'params' => $params,
+    'params' => array_merge($params, $localParams['params']),
 ];
 
 if (YII_ENV_DEV) {

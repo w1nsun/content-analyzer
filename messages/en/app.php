@@ -7,6 +7,7 @@ return [
     'Время редактирования' => 'Updated time',
     'Добавить Ресурс' => 'Create Resource',
     'Добавить' => 'Create',
+    'Добавить {element}' => 'Create {element}',
     'Обновить' => 'Update',
     'Отключен' => 'Disable',
     'Ресурсы' => 'Resources',
@@ -41,4 +42,6 @@ return [
     'Высота' => 'Height',
     'Размер' => 'Size',
     'Parent ID' => 'Parent ID',
+    'Категория' => 'Category',
+    'Тэг' => 'Tag',
 ];

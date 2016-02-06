@@ -30,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'     => function ($data) {
                     return User::enumStatus($data->status);
                 },
-
             ],
             [
                 'label' => Yii::t('app', 'Роли'),

@@ -34,4 +34,14 @@ class ResourceQuery extends ActiveQuery
     {
         return parent::one($db);
     }
+
+    /**
+     * @return $this
+     */
+    public function active()
+    {
+        $this->andFilterWhere(['=', 'status', Resource::STATUS_ACTIVE]);
+
+        return $this;
+    }
 }

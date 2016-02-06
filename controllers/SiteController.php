@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Article;
 use app\models\forms\SignupForm;
 use app\models\User;
 use Yii;
+use yii\authclient\BaseClient;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -46,6 +48,14 @@ class SiteController extends Controller
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'successAuthCallback'],
+            ],
+            'social-signup' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'successSignUpCallback'],
+            ],
         ];
     }
 
@@ -60,7 +70,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new LoginForm(['scenario' => LoginForm::SCENARIO_DEFAULT]);
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
@@ -99,12 +109,13 @@ class SiteController extends Controller
     public function actionSignup()
     {
         $model = new SignupForm();
+        $model->setScenario(SignupForm::SCENARIO_DEFAULT);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 
-            $user           = new User();
-            $user->email    = $model->email;
-            $user->password = $model->password;
+            $user               = new User();
+            $user->email        = $model->email;
+            $user->password     = $model->password;
 
             $user->register();
 
@@ -116,5 +127,54 @@ class SiteController extends Controller
         return $this->render('sign_up_form', [
             'model' => $model
         ]);
+    }
+
+    public function actionTrends()
+    {
+        return $this->render('trends', [
+            'trends' => Article::find()->trends(),
+        ]);
+    }
+
+    public function successSignUpCallback(BaseClient $client)
+    {
+        $attributes = $client->getUserAttributes();
+        $signUpForm = new SignupForm();
+        $signUpForm->setScenario(SignupForm::SCENARIO_SOCIAL);
+        $signUpForm->email = $attributes['email'];
+
+        if ($signUpForm->validate()) {
+            $user              = new User();
+            $user->email       = $signUpForm->email;
+            $user->password    = md5(time());
+            $user->social_id   = $attributes['id'];
+            $user->social_name = $client->getId();
+
+            $user->register();
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Вы успешно зарегистрированы'));
+        } else {
+            $errors = $signUpForm->getErrors();
+            $error = reset($errors)[0];
+            Yii::$app->session->setFlash('danger', $error);
+        }
+
+        return false;
+    }
+
+
+    public function successAuthCallback(BaseClient $client)
+    {
+        $attributes = $client->getUserAttributes();
+        $loginForm = new LoginForm(['scenario' => LoginForm::SCENARIO_SOCIAL]);
+        $loginForm->social = $client->getId();
+        $loginForm->social_id = $attributes['id'];
+
+        if (!$loginForm->socialLogin()) {
+            $errors = $loginForm->getErrors();
+            $error = reset($errors)[0];
+            Yii::$app->session->setFlash('danger', $error);
+        }
+
+        return false;
     }
 }

@@ -33,17 +33,28 @@ iptables -A INPUT -p tcp -m multiport --ports 1337 -m comment --comment "000 tcp
 netstat -ntpua | grep 1337
 iptables-save
 
-6.
+6. установка nodejs и зависимостей
+
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+sudo apt-get install -y nodejs
 
 npm install request --no-bin-links
+cd nodejs
+sudo npm install cheerio
+sudo npm install request
+sudo npm install events
+
 
 7. запускаем тесты
 
 cd /var/www/tests/
 codecept run (unit|)
 
+8.
+прописать access_token для nodejs app в config.json и local_params.php
 
-8. RBAC
-
-yii migrate --migrationPath=@yii/rbac/migrations
+9.
+запусить инициализацию ролей
+yii migrate --migrationPath=@yii/rbac/migrations/
 yii rbac/init
+yii user/add-api-user

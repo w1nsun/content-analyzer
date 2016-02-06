@@ -26,7 +26,9 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 
-
+/nodejs/node_modules
 /web/assets
 /web/runtime
 /web/files
+
+nodejs/npm-debug.log

@@ -43,4 +43,14 @@ $this->params['breadcrumbs'][] = $this->title;
         You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
         To modify the username/password, please check out the code <code>app\models\User::$users</code>.
     </div>
+
+    <?php $authAuthChoice = \yii\authclient\widgets\AuthChoice::begin([
+        'baseAuthUrl' => ['site/auth']
+    ]); ?>
+    <ul>
+        <?php foreach ($authAuthChoice->getClients() as $client): ?>
+            <li><?php $authAuthChoice->clientLink($client) ?></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php \yii\authclient\widgets\AuthChoice::end(); ?>
 </div>

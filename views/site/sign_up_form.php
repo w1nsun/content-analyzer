@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use yii\authclient\widgets\AuthChoice;
 /* @var $this yii\web\View */
 /* @var $model app\models\forms\RegisterForm */
 /* @var $form ActiveForm */
@@ -25,4 +25,15 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php ActiveForm::end(); ?>
         </div>
     </div>
+
+    <?php $authAuthChoice = AuthChoice::begin([
+        'baseAuthUrl' => ['site/social-signup']
+    ]); ?>
+    <ul>
+        <?php foreach ($authAuthChoice->getClients() as $client): ?>
+            <li><?php $authAuthChoice->clientLink($client) ?></li>
+        <?php endforeach; ?>
+    </ul>
+    <?php AuthChoice::end(); ?>
+
 </div><!-- site-register_form -->

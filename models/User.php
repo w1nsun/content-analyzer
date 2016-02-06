@@ -15,6 +15,8 @@ use yii\web\IdentityInterface;
  * @property string $auth_key
  * @property string $access_token
  * @property integer $status
+ * @property string $social_name
+ * @property string $social_id
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -135,21 +137,23 @@ class User extends ActiveRecord implements IdentityInterface
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    public function getPasswordHash($password)
+    public static function getPasswordHash($password)
     {
         return Yii::$app->getSecurity()->generatePasswordHash($password, 15);
     }
 
     /**
      * Sign up user
+     * @return bool
      */
     public function register()
     {
-        $this->password = $this->getPasswordHash($this->password);
+        $this->password = self::getPasswordHash($this->password);
         $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
         $this->status   = self::STATUS_ACTIVE;
+        $this->access_token = '';
 
-        $this->save(false);
+        return $this->save(false);
     }
 
 

@@ -8,7 +8,7 @@ var App = function () {
 
     //vars
     var read_resources_options = {
-        url     : Config.serviceDomain + '/api/resource',
+        url     : 'http://' + Config.serviceDomain + '/api/resource',
         timeout : 15000,
         headers : {
             'Authorization' : 'Bearer ' + Config.serviceAccessToken
@@ -27,7 +27,6 @@ var App = function () {
         event_emitter.on('feed_read', this.feedRead);
         event_emitter.on('feed_item_parse', this.feedItemRead);
         event_emitter.on('feed_item_read', this.writeArticle);
-
     };
 
     this.run = function () {
@@ -94,6 +93,7 @@ var App = function () {
 
                 article.resource_id = resource_id;
                 article.image       = null;
+                article.tags        = [];
 
                 article.title       = $(element)
                                             .children('title')
@@ -110,6 +110,14 @@ var App = function () {
                 article.url         = $(element)
                                             .children('link')
                                             .text();
+
+                $(element).children('category').each(function (idx, category) {
+                    var res = $(category)
+                                .text()
+                                .replace(/<!\[CDATA\[([^\]]+)]\]>/ig, "$1");
+
+                    article.tags.push(res);
+                });
 
                 event_emitter.emit('feed_item_parse', article);
             });
@@ -176,20 +184,18 @@ var App = function () {
     };
 
     this.writeArticle = function (article) {
-
-
-
         var options = {
-            url: Config.serviceDomain + '/api/article/create',
+            url: 'http://' + Config.serviceDomain + '/api/article/create',
             formData: {
                 'Article[title]'       : article.title,
                 'Article[url]'         : article.url,
                 'Article[description]' : article.description,
                 'Article[resource_id]' : article.resource_id,
-                'image'                : article.image ? article.image : ''
+                'image'                : article.image ? article.image : '',
+                'tags'                 : JSON.stringify(article.tags)
             },
             headers: {
-                'Authorization': 'Bearer '+Config.serviceAccessToken
+                'Authorization': 'Bearer ' + Config.serviceAccessToken
             }
         };
 
